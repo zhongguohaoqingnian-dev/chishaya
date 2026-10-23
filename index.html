@@ -1,0 +1,1773 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>吃啥呀 · 阳江校区吃饭指南</title>
+<meta name="description" content="阳江校区吃饭指南：校内校外随机选餐、搜索菜品、收藏好店。iPhone 和安卓都能用。" />
+<meta name="theme-color" content="#FF6B4A" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-title" content="吃啥呀" />
+<meta name="apple-mobile-web-app-status-bar-style" content="default" />
+<link rel="manifest" href="./manifest.webmanifest" />
+<link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png" />
+<link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png" />
+<link rel="stylesheet" href="./iphone.css" />
+<script src="./iphone.js" defer></script>
+<style>
+  :root{
+    --brand:#FF6B4A; --brand-deep:#F04E2C; --brand-soft:#FFE7DE;
+    --gold:#FFB020; --green:#2EC4B6; --green-soft:#DFF6F1;
+    --red:#F0544F; --red-soft:#FDECEC;
+    --bg:#FFF7F0; --card:#FFFFFF; --ink:#3A2B27; --ink2:#8A756C; --line:#F3E6DB;
+    --shadow:0 8px 24px rgba(240,120,80,.10);
+    --r:20px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  html,body{height:100%}
+  body{
+    font-family:"PingFang SC","Microsoft YaHei","Hiragino Sans GB",system-ui,-apple-system,sans-serif;
+    background:var(--bg); color:var(--ink); line-height:1.5; -webkit-font-smoothing:antialiased;
+  }
+  button{font-family:inherit;border:none;background:none;cursor:pointer;color:inherit}
+  input,textarea,select{font-family:inherit;font-size:16px;color:inherit}
+  ::placeholder{color:#c8b8ae}
+  .app{
+    max-width:460px; margin:0 auto; background:#FFF9F4; min-height:100dvh;
+    position:relative; padding-bottom:84px; box-shadow:0 0 0 1px var(--line);
+  }
+  @media(min-width:600px){
+    body{
+      background:
+        radial-gradient(1200px 600px at 10% -10%, #FFE0C7 0%, transparent 55%),
+        radial-gradient(1000px 500px at 110% 10%, #FFD8E2 0%, transparent 50%),
+        radial-gradient(900px 700px at 50% 120%, #D8F5EE 0%, transparent 55%),
+        #FFF3E9;
+    }
+    .app{margin:24px auto;border-radius:34px;min-height:calc(100dvh - 48px);overflow:hidden;box-shadow:0 16px 40px rgba(240,120,80,.16)}
+  }
+
+  /* ===== 首页顶部 ===== */
+  .hero{
+    background:linear-gradient(135deg,#FF7A55 0%,#FF5E7E 100%);
+    color:#fff; padding:18px 18px 20px; border-radius:0 0 26px 26px;
+  }
+  .brand-row{display:flex;align-items:center;justify-content:space-between}
+  .brand{display:flex;align-items:center;gap:10px;font-size:20px;font-weight:800;letter-spacing:.5px}
+  .brand .logo{width:40px;height:40px;border-radius:13px;background:rgba(255,255,255,.22);display:grid;place-items:center;font-size:22px}
+  .brand small{display:block;font-size:11px;font-weight:500;opacity:.9}
+  .hero-sub{margin-top:12px;font-size:12px;opacity:.92;display:flex;gap:8px;flex-wrap:wrap}
+  .hero-sub span{background:rgba(255,255,255,.18);padding:3px 9px;border-radius:20px}
+
+  /* ===== 通用 ===== */
+  .sec{padding:0 18px;margin-top:20px}
+  .sec-h{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:10px}
+  .sec-h h2{font-size:16px;font-weight:800}
+  .sec-h .more{font-size:12px;color:var(--ink2)}
+  .card{background:var(--card);border-radius:var(--r);box-shadow:var(--shadow)}
+  .empty{padding:26px 16px;text-align:center;color:var(--ink2);font-size:13px;background:var(--card);border-radius:var(--r);box-shadow:var(--shadow)}
+  .muted{color:var(--ink2)}
+
+  /* ===== 帮我决定 ===== */
+  .decide{margin:16px 18px 0;background:var(--card);border-radius:22px;padding:16px;box-shadow:var(--shadow)}
+  .decide-h{display:flex;align-items:center;gap:8px;font-size:15px;font-weight:800}
+  .decide-h small{margin-left:auto;font-size:11px;color:var(--ink2);font-weight:500}
+  .area-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+  .area-btn{
+    padding:12px;border-radius:16px;background:#FAF3EC;font-size:14px;font-weight:700;color:var(--ink2);
+    border:1.5px solid transparent;transition:.18s
+  }
+  .area-btn b{display:block;font-size:15px;color:var(--ink)}
+  .area-btn small{font-size:11px;font-weight:500}
+  .area-btn.on{background:linear-gradient(135deg,#FFD8C0,#FFC1C9);border-color:var(--brand);color:var(--brand-deep)}
+  .area-btn.on small{color:var(--brand-deep)}
+  .btn-primary{
+    width:100%;margin-top:12px;padding:13px;border-radius:16px;font-size:15px;font-weight:800;color:#fff;
+    background:linear-gradient(135deg,var(--brand),#FF5E7E);box-shadow:0 8px 18px rgba(240,80,60,.28);
+    transition:.18s
+  }
+  .btn-primary:active{transform:scale(.98)}
+  .btn-primary[disabled]{opacity:.45;box-shadow:none}
+  .decide-result{margin-top:14px}
+  .dr-card{background:linear-gradient(135deg,#FFF3E8,#FFE9EF);border-radius:18px;padding:14px;border:1px solid #FFD9C6}
+  .dr-top{display:flex;align-items:center;gap:12px}
+  .dr-emoji{font-size:36px;flex:0 0 auto}
+  .dr-name{font-size:16px;font-weight:800}
+  .dr-where{font-size:11px;color:var(--ink2);margin-top:2px}
+  .dr-dish{margin-top:12px;background:#fff;border-radius:14px;padding:11px 12px}
+  .dr-dish .t{font-size:11px;color:var(--ink2);font-weight:700}
+  .dr-dish .n{font-size:14px;font-weight:800;margin-top:3px}
+  .dr-dish .d{font-size:12px;color:var(--ink2);margin-top:4px}
+  .dr-dish .p{color:var(--brand-deep);font-weight:800;font-size:14px;float:right;margin-top:-20px}
+  .dr-row{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:11px}
+  .btn-ghost{padding:10px;border-radius:14px;background:#fff;font-size:13px;font-weight:700;color:var(--brand-deep);border:1px solid #FFD9C6}
+  .decide-empty{margin-top:12px;text-align:center;font-size:12px;color:var(--ink2);padding:10px 0 2px}
+  .decide-filters{margin-top:10px}
+  .chips.sm{padding:0;gap:6px;margin-top:6px}
+  .chip.sm{font-size:11px;padding:5px 10px;box-shadow:none;background:#F7F1EA;color:#9b8b80}
+  .chip.sm.on{background:var(--brand);color:#fff}
+
+  /* ===== 食堂入口 ===== */
+  .group-list{display:flex;flex-direction:column;gap:10px}
+  .group-card{
+    display:flex;align-items:center;gap:12px;background:var(--card);border-radius:18px;padding:13px 14px;
+    box-shadow:var(--shadow);text-align:left;transition:.18s
+  }
+  .group-card:active{transform:scale(.985)}
+  .g-emoji{font-size:26px;width:44px;height:44px;border-radius:14px;background:var(--bg);display:grid;place-items:center;flex:0 0 auto}
+  .g-main{flex:1;min-width:0}
+  .g-main b{font-size:14px}
+  .g-main small{display:block;font-size:11px;color:var(--ink2);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .g-count{font-size:11px;color:var(--brand-deep);background:var(--brand-soft);padding:4px 9px;border-radius:20px;font-weight:700;white-space:nowrap}
+
+  /* ===== 横向菜品 ===== */
+  .hscroll{display:flex;gap:11px;overflow-x:auto;padding:2px 2px 10px;scrollbar-width:none}
+  .hscroll::-webkit-scrollbar{display:none}
+  .mini{flex:0 0 152px;background:var(--card);border-radius:18px;padding:12px;box-shadow:var(--shadow)}
+  .mini .pic{font-size:34px;text-align:center;line-height:1;margin:2px 0 8px}
+  .mini .n{font-size:13px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .mini .s{font-size:11px;color:var(--ink2);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .mini .row{display:flex;align-items:center;justify-content:space-between;margin-top:7px}
+  .price{color:var(--brand-deep);font-weight:800;font-size:14px}
+  .stars{color:var(--gold);font-size:11px;letter-spacing:.5px}
+  .rate-num{font-size:11px;color:var(--ink2);margin-left:3px}
+
+  /* ===== 页面头 ===== */
+  .page-head{
+    position:sticky;top:0;z-index:40;background:linear-gradient(135deg,#FF7A55,#FF5E7E);color:#fff;
+    padding:14px 16px;display:flex;align-items:center;gap:12px;border-radius:0 0 22px 22px
+  }
+  .page-head .back{font-size:24px;line-height:1;padding:0 4px}
+  .page-head b{font-size:16px;font-weight:800}
+  .page-head .sub{font-size:11px;opacity:.9;margin-left:auto}
+
+  /* ===== 店铺列表 ===== */
+  .floor-title{font-size:12px;font-weight:800;color:var(--ink2);margin:16px 18px 8px;display:flex;align-items:center;gap:6px}
+  .floor-title::before{content:"";width:3px;height:12px;border-radius:2px;background:var(--brand)}
+  .shop-row{
+    display:flex;align-items:center;gap:12px;background:var(--card);border-radius:18px;padding:12px 14px;
+    box-shadow:var(--shadow);margin:0 18px 10px;text-align:left;width:calc(100% - 36px)
+  }
+  .shop-emoji{font-size:24px;width:42px;height:42px;border-radius:13px;background:var(--bg);display:grid;place-items:center;flex:0 0 auto}
+  .shop-main{flex:1;min-width:0}
+  .shop-main .n{font-size:14px;font-weight:800;display:flex;align-items:center;gap:6px}
+  .shop-main .s{font-size:11px;color:var(--ink2);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .shop-right{text-align:right;flex:0 0 auto}
+  .badge{font-size:10px;font-weight:700;padding:2px 7px;border-radius:20px;white-space:nowrap}
+  .b-open{background:var(--green-soft);color:#1e9e8f}
+  .b-close{background:#F1EAE4;color:#9b8b80}
+  .b-hot{background:var(--red-soft);color:#E2403A}
+  .b-new{background:#E7F0FF;color:#3B82F6}
+
+  /* ===== 店铺详情 ===== */
+  .shop-hero{margin:14px 18px 0;background:var(--card);border-radius:22px;padding:16px;box-shadow:var(--shadow);position:relative}
+  .shop-hero .top{display:flex;align-items:center;gap:12px}
+  .shop-hero .big{font-size:40px}
+  .shop-hero h1{font-size:19px;font-weight:800}
+  .shop-hero .where{font-size:11px;color:var(--ink2);margin-top:3px}
+  .shop-hero .desc{font-size:12.5px;color:#6d5b52;margin-top:11px;line-height:1.65}
+  .shop-hero .meta{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+  .pill{font-size:11px;background:var(--bg);color:#8a756c;padding:4px 9px;border-radius:20px}
+  .pill.price{background:var(--brand-soft);color:var(--brand-deep);font-weight:700}
+  .edit-btn{position:absolute;right:14px;top:14px;font-size:11px;background:var(--brand-soft);color:var(--brand-deep);padding:5px 10px;border-radius:20px;font-weight:700}
+
+  /* ===== 菜品行 ===== */
+  .dish-list{padding:0 18px;margin-top:12px;display:flex;flex-direction:column;gap:10px}
+  .dish-row{display:flex;gap:12px;background:var(--card);border-radius:18px;padding:12px 14px;box-shadow:var(--shadow);text-align:left;width:100%}
+  .d-emoji{font-size:26px;width:46px;height:46px;border-radius:14px;background:var(--bg);display:grid;place-items:center;flex:0 0 auto}
+  .d-main{flex:1;min-width:0}
+  .d-top{display:flex;align-items:center;gap:7px}
+  .d-top b{font-size:14px}
+  .d-sub{font-size:11px;color:var(--ink2);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .d-desc{font-size:12px;color:#7c6a61;margin-top:5px;line-height:1.55;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .d-foot{display:flex;align-items:center;justify-content:space-between;margin-top:7px}
+  .tags{display:flex;flex-wrap:wrap;gap:4px}
+  .tag{font-size:10px;color:#a0816c;background:#FBF1E9;padding:2px 7px;border-radius:14px}
+  .tag.warn{color:#d6453f;background:var(--red-soft)}
+  .tag.good{color:#1e9e8f;background:var(--green-soft)}
+
+  /* ===== 搜索 ===== */
+  .search-wrap{padding:12px 18px 0}
+  .search-box{display:flex;align-items:center;gap:8px;background:var(--card);border-radius:14px;padding:9px 12px;box-shadow:var(--shadow)}
+  .search-box input{border:none;outline:none;width:100%;background:transparent;font-size:14px}
+  .chips{display:flex;gap:7px;overflow-x:auto;padding:10px 18px 2px;scrollbar-width:none}
+  .chips::-webkit-scrollbar{display:none}
+  .chip{flex:0 0 auto;font-size:12px;padding:6px 12px;border-radius:20px;background:var(--card);color:var(--ink2);font-weight:600;border:1px solid transparent;box-shadow:0 2px 8px rgba(240,120,80,.08)}
+  .chip.on{background:var(--brand);color:#fff}
+  .result-tip{padding:14px 18px 0;font-size:12px;color:var(--ink2)}
+
+  /* ===== 管理 ===== */
+  .manage-tip{margin:14px 18px 0;font-size:12px;color:var(--ink2);background:#FFF3E9;border-radius:14px;padding:11px 13px;line-height:1.6}
+  .manage-actions{display:flex;gap:10px;padding:12px 18px 0}
+  .manage-actions button{flex:1;padding:11px;border-radius:14px;font-size:13px;font-weight:700;background:var(--brand);color:#fff;box-shadow:0 6px 14px rgba(240,80,60,.22)}
+  .manage-actions .light{background:var(--card);color:var(--ink2);box-shadow:var(--shadow)}
+  .m-group{margin-top:16px}
+  .m-title{font-size:12px;font-weight:800;color:var(--ink2);padding:0 18px 7px;display:flex;gap:6px}
+  .m-title span{margin-left:auto;font-weight:600}
+  .m-row{display:flex;align-items:center;gap:10px;background:var(--card);margin:0 18px 8px;padding:10px 12px;border-radius:14px;box-shadow:var(--shadow)}
+  .m-row .shop-emoji{width:34px;height:34px;font-size:19px;border-radius:10px}
+  .m-name{flex:1;font-size:13px;font-weight:700;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .mini-btn{font-size:11px;font-weight:700;padding:5px 10px;border-radius:20px;background:var(--brand-soft);color:var(--brand-deep)}
+  .mini-btn.danger{background:var(--red-soft);color:#d6453f}
+  .mini-btn.plain{background:#F5EFE9;color:var(--ink2)}
+
+  /* ===== 底部导航 ===== */
+  .tabbar{
+    position:fixed;bottom:0;left:0;right:0;max-width:460px;margin:0 auto;z-index:120;
+    background:rgba(255,255,255,.96);backdrop-filter:blur(12px);
+    border-top:1px solid var(--line);
+    display:flex;padding:7px 4px calc(7px + env(safe-area-inset-bottom));
+  }
+  .tab{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:10px;color:#b3a49a;font-weight:700;padding:3px 0}
+  .tab .ico{font-size:19px;line-height:1;opacity:.65;filter:grayscale(1)}
+  .tab.active{color:var(--brand-deep)}
+  .tab.active .ico{opacity:1;filter:none}
+
+  /* ===== 弹层 ===== */
+  .mask{position:fixed;inset:0;background:rgba(58,43,39,.45);opacity:0;pointer-events:none;transition:.22s;z-index:200}
+  .mask.open{opacity:1;pointer-events:auto}
+  .sheet{
+    position:fixed;left:0;right:0;bottom:0;max-width:460px;margin:0 auto;z-index:210;
+    background:#FFFDFB;border-radius:24px 24px 0 0;padding:18px 18px calc(20px + env(safe-area-inset-bottom));
+    transform:translateY(110%);transition:transform .26s cubic-bezier(.2,.9,.3,1);max-height:86dvh;overflow-y:auto
+  }
+  .sheet.open{transform:translateY(0)}
+  .sheet-top{display:flex;align-items:center;gap:12px}
+  .sheet-top .big{font-size:42px}
+  .sheet-top h2{font-size:19px;font-weight:800}
+  .sheet-top .where{font-size:11px;color:var(--ink2);margin-top:3px}
+  .sheet-close{margin-left:auto;width:32px;height:32px;border-radius:50%;background:#F5EFE9;color:#9b8b80;font-size:16px}
+  .sheet-price{font-size:22px;font-weight:800;color:var(--brand-deep);margin-top:10px}
+  .sheet-desc{font-size:13px;color:#6d5b52;margin-top:9px;line-height:1.7}
+  .sheet-sec{font-size:12px;font-weight:800;color:var(--ink2);margin-top:14px}
+  .sheet-fav{width:100%;margin-top:14px;padding:13px;border-radius:16px;font-size:14px;font-weight:800;background:var(--brand-soft);color:var(--brand-deep)}
+  .sheet-fav.on{background:#FFE1DC;color:#D63B2F}
+  .sheet-go{width:100%;margin-top:9px;padding:12px;border-radius:16px;font-size:13px;font-weight:700;background:#F5EFE9;color:var(--ink2)}
+
+  /* ===== 编辑器 ===== */
+  .editor{
+    position:fixed;inset:0;max-width:460px;margin:0 auto;z-index:300;background:var(--bg);
+    transform:translateY(100%);transition:transform .28s cubic-bezier(.2,.9,.3,1);
+    display:flex;flex-direction:column
+  }
+  .editor.open{transform:translateY(0)}
+  .editor.sub{z-index:320}
+  .ed-head{
+    background:linear-gradient(135deg,#FF7A55,#FF5E7E);color:#fff;padding:14px 16px;
+    display:flex;align-items:center;gap:12px;flex:0 0 auto
+  }
+  .ed-head .back{font-size:24px;line-height:1;padding:0 4px}
+  .ed-head b{font-size:16px}
+  .ed-body{flex:1;overflow-y:auto;padding:16px 18px calc(28px + env(safe-area-inset-bottom))}
+  .field{margin-bottom:12px}
+  .field label{display:block;font-size:12px;font-weight:700;color:var(--ink2);margin-bottom:5px}
+  .field input,.field select,.field textarea{
+    width:100%;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 12px;
+    outline:none;font-size:14px;line-height:1.5
+  }
+  .field textarea{resize:vertical}
+  .field input:focus,.field select:focus,.field textarea:focus{border-color:#FFB59E;background:#FFFDFB}
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .row3{display:grid;grid-template-columns:70px 1fr 1fr;gap:10px}
+  .ed-dishes{display:flex;flex-direction:column;gap:8px;margin-bottom:6px}
+  .ed-dish{display:flex;align-items:center;gap:8px;background:var(--card);border-radius:12px;padding:9px 11px;box-shadow:var(--shadow)}
+  .ed-dish .n{flex:1;font-size:13px;font-weight:700;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .ed-dish .p{font-size:12px;color:var(--brand-deep);font-weight:700}
+  .save-btn{width:100%;margin-top:18px;padding:13px;border-radius:16px;background:linear-gradient(135deg,var(--brand),#FF5E7E);color:#fff;font-size:15px;font-weight:800;box-shadow:0 8px 18px rgba(240,80,60,.26)}
+  .del-btn{width:100%;margin-top:10px;padding:12px;border-radius:16px;background:var(--red-soft);color:#d6453f;font-size:13px;font-weight:800}
+
+  /* ===== 确认框 ===== */
+  .confirm{position:fixed;inset:0;z-index:400;display:none;align-items:center;justify-content:center;background:rgba(58,43,39,.45);padding:0 34px}
+  .confirm.open{display:flex}
+  .confirm-box{width:100%;max-width:320px;background:#fff;border-radius:20px;padding:18px;text-align:center;box-shadow:0 20px 50px rgba(0,0,0,.2)}
+  .confirm-box p{font-size:14px;line-height:1.6;margin-bottom:16px}
+  .confirm-box .row{display:flex;gap:10px}
+  .confirm-box button{flex:1;padding:11px;border-radius:14px;font-size:14px;font-weight:700;background:#F5EFE9;color:var(--ink2)}
+  .confirm-box .ok{background:var(--brand);color:#fff}
+  .confirm-box .ok.danger{background:var(--red)}
+
+  /* ===== Toast ===== */
+  #toast{
+    position:fixed;left:50%;bottom:110px;transform:translate(-50%,10px);z-index:500;
+    background:rgba(58,43,39,.92);color:#fff;font-size:13px;padding:9px 16px;border-radius:20px;
+    opacity:0;pointer-events:none;transition:.22s;white-space:nowrap;max-width:90%
+  }
+  #toast.show{opacity:1;transform:translate(-50%,0)}
+
+  .view{display:none}
+  .view.active{display:block}
+</style>
+</head>
+<body>
+
+<div class="app">
+  <!-- 首页 -->
+  <section class="view active" id="view-home">
+    <div class="hero">
+      <div class="brand-row">
+        <div class="brand">
+          <div class="logo">🍚</div>
+          <div>吃啥呀<small>阳江校区 · 吃饭指南</small></div>
+        </div>
+      </div>
+      <div class="phone-actions">
+        <button onclick="shareApp()">↗ 分享给同学</button>
+        <button onclick="openInstallHelp()">＋ 添加到桌面</button>
+      </div>
+      <div class="hero-sub">
+        <span>嘉禾 · 桃李</span><span>门口商铺</span><span>市区好店</span>
+      </div>
+    </div>
+
+    <div class="decide">
+      <div class="decide-h">🎲 帮我决定 <small>先选范围，再随机</small></div>
+      <div class="area-row">
+        <button class="area-btn" data-area="in" onclick="setArea('in')"><b>校内</b><small>食堂里的档口</small></button>
+        <button class="area-btn" data-area="out" onclick="setArea('out')"><b>校外</b><small>门口 & 市区</small></button>
+      </div>
+      <div class="decide-filters">
+        <div class="chips sm" id="decide-meal-chips"></div>
+        <div class="chips sm" id="decide-price-chips"></div>
+      </div>
+      <button class="btn-primary" id="btn-decide" disabled onclick="rollOnce()">开始随机</button>
+      <div class="decide-result" id="decide-result"></div>
+    </div>
+
+    <div class="sec">
+      <div class="sec-h"><h2>去哪儿吃</h2><span class="more">点开看全部档口</span></div>
+      <div class="group-list" id="home-groups"></div>
+    </div>
+
+    <div class="sec">
+      <div class="sec-h"><h2>高分推荐</h2><span class="more">评分 4.5 以上</span></div>
+      <div class="hscroll" id="home-top"></div>
+    </div>
+  </section>
+
+  <!-- 分组 -->
+  <section class="view" id="view-group">
+    <div class="page-head">
+      <button class="back" onclick="goHome()">‹</button>
+      <b id="group-title">嘉禾食堂</b>
+      <span class="sub" id="group-sub"></span>
+    </div>
+    <div id="group-body"></div>
+  </section>
+
+  <!-- 店铺详情 -->
+  <section class="view" id="view-shop">
+    <div class="page-head">
+      <button class="back" onclick="backToGroup()">‹</button>
+      <b id="shop-title">店铺</b>
+      <span class="sub" id="shop-sub"></span>
+    </div>
+    <div id="shop-body"></div>
+  </section>
+
+  <!-- 搜索 -->
+  <section class="view" id="view-search">
+    <div class="page-head"><b>🔍 搜索</b><span class="sub">店名 / 菜名 / 标签</span></div>
+    <div class="search-wrap">
+      <div class="search-box"><span>🔍</span><input id="search-input" placeholder="搜黄焖鸡、烧腊、麻辣烫…" oninput="doSearch()" /></div>
+    </div>
+    <div class="chips" id="area-chips"></div>
+    <div class="chips" id="group-chips"></div>
+    <div class="chips" id="meal-chips"></div>
+    <div class="chips" id="price-chips"></div>
+    <div class="result-tip" id="search-tip"></div>
+    <div id="search-body"></div>
+  </section>
+
+  <!-- 收藏 -->
+  <section class="view" id="view-fav">
+    <div class="page-head"><b>❤️ 我的收藏</b><span class="sub">存在本机</span></div>
+    <div class="dish-list" id="fav-list"></div>
+  </section>
+
+  <!-- 管理 -->
+  <section class="view" id="view-manage">
+    <div class="page-head"><b>✏️ 数据管理</b><span class="sub">本机保存</span></div>
+    <div class="manage-tip">每个人的修改和收藏仅保存在当前浏览器或桌面 App，不会影响其他同学，也不会自动同步。清理网站数据或换设备可能丢失；从桌面打开后请在桌面版本里收藏。</div>
+    <div class="manage-actions">
+      <button onclick="openShopEditor('')">+ 新增店铺</button>
+      <button class="light" onclick="askReset()">恢复内置数据</button>
+    </div>
+    <div id="manage-list"></div>
+  </section>
+
+  <nav class="tabbar">
+    <button class="tab active" data-view="home" onclick="showView('home')"><span class="ico">🏠</span>首页</button>
+    <button class="tab" data-view="search" onclick="showView('search')"><span class="ico">🔍</span>搜索</button>
+    <button class="tab" data-view="fav" onclick="showView('fav')"><span class="ico">❤️</span>收藏</button>
+    <button class="tab" data-view="manage" onclick="showView('manage')"><span class="ico">✏️</span>管理</button>
+  </nav>
+</div>
+
+<!-- 菜品详情 -->
+<div class="mask" id="mask" onclick="closeDish()"></div>
+<div class="sheet" id="sheet">
+  <div class="sheet-top">
+    <span class="big" id="sheet-emoji">🍚</span>
+    <div style="flex:1;min-width:0">
+      <h2 id="sheet-name">菜名</h2>
+      <div class="where" id="sheet-where"></div>
+    </div>
+    <button class="sheet-close" onclick="closeDish()">✕</button>
+  </div>
+  <div class="sheet-price" id="sheet-price">¥0</div>
+  <div style="margin-top:6px;font-size:12px;color:#8a756c" id="sheet-rate"></div>
+  <div class="sheet-sec">这道菜</div>
+  <div class="sheet-desc" id="sheet-desc"></div>
+  <div class="sheet-sec">标签</div>
+  <div class="tags" id="sheet-tags" style="margin-top:6px"></div>
+  <button class="sheet-fav" id="sheet-fav" onclick="toggleFavFromSheet()">🤍 收藏这道菜</button>
+  <button class="sheet-go" onclick="goShopFromSheet()">看看这家店的其他菜 ›</button>
+</div>
+
+<!-- 店铺编辑 -->
+<div class="editor" id="shop-editor">
+  <div class="ed-head">
+    <button class="back" onclick="closeShopEditor()">‹</button>
+    <b id="shop-ed-title">编辑店铺</b>
+  </div>
+  <div class="ed-body">
+    <div class="field"><label>店铺 / 档口名称</label><input id="es-name" placeholder="例如：港式风味店" /></div>
+    <div class="row3">
+      <div class="field"><label>图标</label><input id="es-emoji" maxlength="4" placeholder="🍗" /></div>
+      <div class="field"><label>所属</label>
+        <select id="es-group" onchange="syncFloorHint()">
+          <option>嘉禾食堂</option><option>桃李食堂</option><option>学校门口</option><option>市区</option>
+        </select>
+      </div>
+      <div class="field"><label>楼层 / 位置</label><input id="es-floor" placeholder="二楼" /></div>
+    </div>
+    <div class="field"><label>营业时间</label><input id="es-hours" placeholder="11:20-18:45" /></div>
+    <div class="row2">
+      <div class="field"><label>人均（元）</label><input id="es-avg" type="number" min="0" placeholder="15" /></div>
+      <div class="field"><label>评分 0-5（0 = 未评价）</label><input id="es-rating" type="number" min="0" max="5" step="0.1" placeholder="4.5" /></div>
+    </div>
+    <div class="field"><label>标签（用逗号分隔）</label><input id="es-tags" placeholder="招牌,便宜,推荐" /></div>
+    <div class="field"><label>简介 / 地址 / 备注</label><textarea id="es-desc" rows="3" placeholder="味道、出餐速度、地址…"></textarea></div>
+
+    <div class="sec-h" style="margin-top:6px">
+      <h2 style="font-size:14px">菜品</h2>
+      <button class="mini-btn" onclick="openDishEditor('')">+ 加一道</button>
+    </div>
+    <div class="ed-dishes" id="ed-dishes"></div>
+
+    <button class="save-btn" onclick="saveShop()">保存店铺</button>
+    <button class="del-btn" id="shop-del-btn" onclick="delShopFromEditor()" style="display:none">删除这家店</button>
+  </div>
+</div>
+
+<!-- 菜品编辑 -->
+<div class="editor sub" id="dish-editor">
+  <div class="ed-head">
+    <button class="back" onclick="closeDishEditor()">‹</button>
+    <b id="dish-ed-title">添加菜品</b>
+  </div>
+  <div class="ed-body">
+    <div class="field"><label>菜名</label><input id="ed-name" placeholder="例如：酱油鸡饭" /></div>
+    <div class="row3">
+      <div class="field"><label>图标</label><input id="ed-emoji" maxlength="4" placeholder="🍗" /></div>
+      <div class="field"><label>价格（元）</label><input id="ed-price" type="number" min="0" placeholder="15" /></div>
+      <div class="field"><label>评分 0-5</label><input id="ed-rating" type="number" min="0" max="5" step="0.1" placeholder="4.5" /></div>
+    </div>
+    <div class="field"><label>标签（用逗号分隔）</label><input id="ed-tags" placeholder="招牌,下饭" /></div>
+    <div class="field"><label>菜品介绍</label><textarea id="ed-desc" rows="4" placeholder="口味、分量、出餐速度、避雷点…"></textarea></div>
+    <button class="save-btn" onclick="saveDish()">保存菜品</button>
+    <button class="del-btn" id="dish-del-btn" onclick="delDishFromEditor()" style="display:none">删除这道菜</button>
+  </div>
+</div>
+
+<!-- 确认 -->
+<div class="confirm" id="confirm-layer">
+  <div class="confirm-box">
+    <p id="confirm-msg"></p>
+    <div class="row">
+      <button onclick="closeConfirm()">取消</button>
+      <button class="ok danger" id="confirm-ok" onclick="okConfirm()">确定</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+/* ============================================================
+   1. 内置数据（可被手机本地修改覆盖）
+   ============================================================ */
+function D(name, emoji, price, rating, tags, desc) {
+  return { name, emoji, price, rating, tags, desc };
+}
+function S(id, name, emoji, group, floor, hours, avg, rating, tags, desc, dishes) {
+  return { id, name, emoji, group, floor, hours, avg, rating, tags, desc, dishes };
+}
+
+const GROUP_META = {
+  '嘉禾食堂': { area: 'in', emoji: '🏫', desc: '一楼快餐 + 二楼 11 个档口，选择最多' },
+  '桃李食堂': { area: 'in', emoji: '🏠', desc: '炸酱面、肠粉、烧腊、姆斯汉堡' },
+  '学校门口': { area: 'out', emoji: '🚪', desc: '走 5 分钟就到，丰俭由人' },
+  '市区': { area: 'out', emoji: '🌆', desc: '阳江本地人推荐，周末解馋' }
+};
+
+// 饭点窗口（分钟），用来判断一家店这个时段开不开
+const MEALS = {
+  '早餐': [6 * 60 + 30, 10 * 60],
+  '午餐': [11 * 60 + 20, 13 * 60 + 30],
+  '晚餐': [17 * 60 + 30, 19 * 60 + 30],
+  '宵夜': [21 * 60 + 30, 24 * 60]
+};
+const PRICE_RANGES = { '≤10': [0, 10], '10-20': [10, 20], '20-50': [20, 50], '50+': [50, 9999] };
+
+const BASE_SHOPS = [
+  /* ---------- 嘉禾食堂 一楼 ---------- */
+  S('jh1-cf', '大众自选快餐', '🍱', '嘉禾食堂', '一楼', '7:00-19:00', 16, 3.6, ['早中晚', '自选'],
+    '早中晚都开，和校外快餐店差不多，价格偏贵、分量偏少；鸡腿偶尔会遇到不熟的，早餐以粥、包子、炒粉为主。',
+    [
+      D('一荤一素套餐', '🍱', 8, 3.5, ['基础套餐', '偏贵'], '一个素菜加一个小荤 8 元，饭量大的同学可能不太够，价格在食堂里算贵的。'),
+      D('鸡腿饭', '🍗', 11, 3.2, ['鸡腿', '注意'], '鸡腿个头不小，但偶尔会遇到没熟透的情况，点之前可以看一眼。'),
+      D('皮蛋瘦肉粥', '🥣', 4, 3.8, ['早餐'], '早餐档常驻，粥底偏稀，配一根油条刚好。'),
+      D('炒粉炒面', '🍜', 6, 3.6, ['早餐', '现炒'], '早餐现炒，油稍多但出餐快，赶早八的首选。'),
+      D('芝麻球', '🥯', 2, 4.0, ['早餐', '小吃'], '外脆里糯，去晚了经常卖完。')
+    ]),
+  S('jh1-jz', '饺子面档', '🥟', '嘉禾食堂', '一楼', '11:00-19:00', 15, 3.7, ['午晚', '面食'],
+    '只做午餐和晚饭。粉类出餐快，云吞现包要等，赶时间建议点粉。',
+    [
+      D('牛腩粉', '🍜', 14, 4.0, ['出餐快'], '汤底清甜，牛腩炖得软，是这一档出餐最快的。'),
+      D('云吞面', '🥟', 13, 3.8, ['现包'], '云吞皮薄肉鲜，但现包现煮，人多时要等十分钟以上。'),
+      D('手工水饺', '🥟', 12, 3.9, ['饺子'], '韭菜猪肉馅，皮略厚，胜在现煮。'),
+      D('炸酱面', '🍜', 12, 3.6, ['面食'], '酱香够，拌开偏咸，配一碗汤刚好。')
+    ]),
+  S('jh1-mb', '面包档', '🍞', '嘉禾食堂', '一楼', '7:00-20:00', 8, 3.9, ['早餐', '烘焙'],
+    '面包种类多，味道还行但价格偏贵，适合当早饭或下午加餐。',
+    [
+      D('肉松面包', '🍞', 6, 4.2, ['招牌'], '肉松给得足，面包体松软，早上买的人最多。'),
+      D('火腿芝士包', '🥪', 7, 3.9, ['咸口'], '芝士能拉丝，火腿偏咸，趁热吃最好。'),
+      D('蛋挞', '🥧', 4, 4.1, ['现烤'], '刚出炉时酥皮最脆，凉了会软。'),
+      D('豆沙包', '🍞', 3, 3.6, ['甜口'], '豆沙偏甜，配豆浆刚好。')
+    ]),
+  S('jh1-mx', '蜜雪冰城', '🧋', '嘉禾食堂', '一楼', '7:00-21:30', 8, 4.5, ['饮品', '连锁'],
+    '大品牌无需多言，价格良心。早上只卖咖啡，其他时段饮品齐全。',
+    [
+      D('冰鲜柠檬水', '🍋', 4, 4.7, ['招牌', '解腻'], '4 块钱一大杯，酸度刚好，配油腻的饭很解腻。'),
+      D('珍珠奶茶', '🧋', 6, 4.4, ['奶茶'], '珍珠 Q 弹，甜度建议七分。'),
+      D('美式咖啡', '☕', 6, 3.8, ['早餐', '提神'], '早上限定，苦味偏重，赶早八靠它。'),
+      D('圣代', '🍦', 4, 4.3, ['甜品'], '冰淇淋机现打，夏天午饭后必点。')
+    ]),
+
+  /* ---------- 嘉禾食堂 二楼 ---------- */
+  S('jh2-mlt', '麻辣烫', '🌶️', '嘉禾食堂', '二楼', '11:20-18:45', 21, 3.9, ['午晚', '自选'],
+    '菜自己夹，汤底偏微辣，菜品新鲜度一般，人均 21 在食堂里算偏贵。',
+    [
+      D('微辣麻辣烫', '🌶️', 21, 3.9, ['自选', '微辣'], '默认汤底微辣，麻酱香但不厚重，夹菜时注意别夹太多。'),
+      D('番茄麻辣烫', '🍅', 22, 4.0, ['番茄汤底'], '番茄汤底更清爽，不爱吃辣的可以选这个。'),
+      D('宽粉', '🍜', 3, 4.2, ['加料'], '宽粉吸汤，建议加一份。')
+    ]),
+  S('jh2-sl', '广式烧腊', '🦆', '嘉禾食堂', '二楼', '11:20-18:30', 16, 3.6, ['午晚', '烧腊'],
+    '烧鸭、猪脚、叉烧、肉卷都有，经常搞活动，但分量偏少，青菜不太行。',
+    [
+      D('烧鸭饭', '🦆', 16, 4.0, ['招牌'], '皮脆油香，斩件偏小份，青菜基本是配角。'),
+      D('猪脚饭', '🍖', 17, 3.8, ['烧腊'], '卤得够软，胶质足，分量看师傅手感。'),
+      D('叉烧饭', '🍖', 16, 3.7, ['烧腊'], '蜜汁偏甜，肥瘦各半。'),
+      D('肉卷饭', '🌯', 14, 3.4, ['便宜'], '价格最低的一款，肉卷偏咸。')
+    ]),
+  S('jh2-bz', '冰浆铺', '🍹', '嘉禾食堂', '二楼', '10:00-21:00', 12, 4.3, ['饮品', '鲜榨'],
+    '10 点左右开门，水果现榨、分量足，价格偏贵。主打鲜果汁和糖水。',
+    [
+      D('鲜榨西瓜汁', '🍉', 10, 4.4, ['鲜榨'], '整块西瓜现打，不加水，夏天解暑。'),
+      D('柠檬百香果汁', '🍋', 12, 4.5, ['招牌'], '酸爽带果粒，怕酸的可以少糖。'),
+      D('芒果冰沙', '🥭', 14, 4.3, ['冰沙'], '芒果味浓，杯量大，两个人分也够。'),
+      D('绿豆糖水', '🍵', 8, 3.8, ['糖水'], '熬得沙糯，甜度偏高。')
+    ]),
+  S('jh2-fdxz', '饭点小灶', '🍲', '嘉禾食堂', '二楼', '11:20-19:00', 15, 4.3, ['午晚', '蒸饭', '小炒'],
+    '11:20 左右开门，荷叶蒸饭和小炒都做得不错，锅气足，是二楼比较稳的一家。',
+    [
+      D('排骨荷叶蒸饭', '🍚', 15, 4.5, ['招牌'], '荷叶香渗进米饭，排骨软烂脱骨，米饭吸汁。'),
+      D('腊味荷叶蒸饭', '🍚', 15, 4.4, ['腊味'], '腊肠腊肉双拼，咸香下饭，油润不腻。'),
+      D('牛肉荷叶蒸饭', '🥩', 16, 4.3, ['牛肉'], '牛肉片嫩，铺得比较满，多一块钱值得。'),
+      D('农家小炒肉', '🌶️', 15, 4.2, ['小炒', '下饭'], '辣椒炒得香，五花肉煸出油，配饭一绝。'),
+      D('小炒牛肉', '🥩', 17, 4.1, ['小炒'], '牛肉嫩、青椒香，就是分量偏小。'),
+      D('肉饼蒸饭', '🍚', 14, 4.0, ['蒸饭'], '手打肉饼，口感扎实，适合口味清淡的。')
+    ]),
+  S('jh2-kt', '稻田烤肉拌饭', '🍛', '嘉禾食堂', '二楼', '11:20-19:00', 14, 4.0, ['午晚', '拌饭'],
+    '11:20 左右开门，主打鸡肉类烤肉拌饭和水煮肉片，分量偏少但价格还行。',
+    [
+      D('鸡肉烤肉拌饭', '🍛', 13, 4.2, ['招牌'], '鸡肉烤得焦香，酱汁偏甜，拌开很香。'),
+      D('水煮肉片', '🌶️', 15, 3.9, ['川味'], '辣度中等，肉片偏少，底下豆芽多。'),
+      D('加蛋拌饭', '🥚', 15, 4.0, ['加料'], '加一颗溏心蛋，拌饭更顺口。')
+    ]),
+  S('jh2-tf', '美味汤饭', '🥣', '嘉禾食堂', '二楼', '11:20-19:00', 13, 3.2, ['午晚', '避雷'],
+    '汤饭价格偏贵还不好吃，饺子是速冻的。想吃汤饭建议去桃李二楼的汤饭档。',
+    [
+      D('汤饭', '🥣', 13, 3.0, ['避雷'], '汤底偏寡，配菜少，价格和出品不太匹配。'),
+      D('速冻水饺', '🥟', 10, 3.3, ['便宜'], '速冻现煮，胜在便宜，别抱太大期待。')
+    ]),
+  S('jh2-gs', '港式风味店', '🍗', '嘉禾食堂', '二楼', '11:20-19:00', 15, 4.4, ['午晚', '港式'],
+    '11:20 左右开店，酱油鸡和口水鸡很好吃，还有手撕鸡、猪脚、肉卷，港式酱汁很香。',
+    [
+      D('酱油鸡饭', '🍗', 15, 4.6, ['招牌'], '豉油香透骨，鸡皮滑，配的姜葱汁很加分。'),
+      D('口水鸡饭', '🌶️', 15, 4.6, ['招牌', '微辣'], '红油香而不燥，鸡肉嫩，底下垫黄瓜。'),
+      D('手撕鸡饭', '🐔', 15, 4.3, ['手撕鸡'], '鸡肉撕成条，拌香油和芝麻，口感清爽。'),
+      D('猪脚饭', '🍖', 16, 4.2, ['港式'], '卤得入味、胶质多，偏咸一点。'),
+      D('肉卷饭', '🌯', 14, 4.0, ['便宜'], '分量一般，但酱汁好吃。')
+    ]),
+  S('jh2-hd', '滑蛋饭', '🍳', '嘉禾食堂', '二楼', '11:20-19:00', 15, 4.0, ['午晚', '滑蛋'],
+    '11:20 左右开门，只做滑蛋饭，蛋嫩汁多，整体偏清淡。',
+    [
+      D('虾仁滑蛋饭', '🍤', 16, 4.1, ['虾仁'], '蛋液嫩滑，虾仁给得不少，酱汁偏甜。'),
+      D('叉烧滑蛋饭', '🍳', 15, 4.0, ['叉烧'], '叉烧切丁混在蛋里，咸甜交织。'),
+      D('原味滑蛋饭', '🍳', 13, 3.9, ['基础'], '最便宜的一款，蛋香突出。')
+    ]),
+  S('jh2-jy', '洁洋食品', '🥘', '嘉禾食堂', '二楼', '11:20-19:00', 15, 3.8, ['午晚', '咖喱', '面食'],
+    '11:20 左右开门，主打咖喱饭和鸡排，面食汤底像港式，整体味道偏重。',
+    [
+      D('咖喱鸡排饭', '🍛', 15, 4.0, ['招牌'], '咖喱浓，鸡排现炸，偏咸需要配饭。'),
+      D('港式汤面', '🍜', 13, 3.7, ['汤面'], '汤底像港式清汤，偏咸，面条偏软。'),
+      D('鸡排饭', '🍗', 15, 3.9, ['炸物'], '鸡排大块、外皮脆，吃多了有点油。')
+    ]),
+  S('jh2-fm', '粉面档口', '🍜', '嘉禾食堂', '二楼', '11:20-19:00', 15, 3.5, ['午晚', '粉面'],
+    '紧挨着洁洋食品。花甲粉、五谷鱼粉、云吞都有，金汤鱼粉很辣很烧胃，整体偏淡。',
+    [
+      D('金汤五谷鱼粉', '🌶️', 15, 3.2, ['超辣', '烧胃'], '金汤辣度很猛，胃不好的慎点，真的会烧心。'),
+      D('花甲粉', '🐚', 14, 3.6, ['海鲜'], '花甲给得还行，汤偏淡，粉丝吸汤。'),
+      D('云吞', '🥟', 12, 3.5, ['云吞'], '皮偏厚，汤底清淡，胜在便宜。')
+    ]),
+
+  /* ---------- 桃李食堂 一楼 ---------- */
+  S('tl1-cf', '大众自选快餐', '🍱', '桃李食堂', '一楼', '7:00-19:00', 16, 3.7, ['早中晚', '自选'],
+    '和嘉禾那边差不多，价格最近有所上涨，早餐白粥免费，这点很良心。',
+    [
+      D('一荤一素套餐', '🍱', 8, 3.6, ['基础套餐'], '一个素菜加一个小荤 8 元，分量偏少，价格最近涨了。'),
+      D('白粥', '🥣', 0, 4.0, ['早餐', '免费'], '早餐免费供应，配点咸菜就能对付一顿。'),
+      D('炒粉', '🍜', 6, 3.8, ['早餐'], '现炒，锅气有，油偏多。'),
+      D('芝麻球', '🥯', 2, 4.0, ['小吃'], '外脆内糯，早餐档常客。'),
+      D('鸡腿饭', '🍗', 11, 3.6, ['鸡腿'], '鸡腿比嘉禾熟得稳一些，分量一般。')
+    ]),
+  S('tl1-jz', '饺子面档', '🥟', '桃李食堂', '一楼', '7:00-19:00', 13, 4.3, ['早中晚', '面食'],
+    '早中晚都开，价格不算便宜也不算实惠，但味道不错，炸酱面好吃、出餐快，高峰期要等。',
+    [
+      D('炸酱面', '🍜', 12, 4.6, ['招牌'], '酱香浓郁，面条筋道，拌匀后每根都挂酱。'),
+      D('手工水饺', '🥟', 13, 4.2, ['饺子'], '现包现煮，馅料足，蘸醋很香。'),
+      D('汤面', '🍲', 10, 4.0, ['汤面'], '清汤底，配青菜和肉片，早餐也卖。'),
+      D('云吞面', '🥟', 13, 4.1, ['云吞'], '云吞个头大，汤头清甜。')
+    ]),
+  S('tl1-cf2', '肠粉店', '🥡', '桃李食堂', '一楼', '7:00-19:00', 8, 4.2, ['早中晚', '肠粉'],
+    '肠粉、蒸粉、蒸面都有，酱汁是灵魂，早餐吃很舒服，人均 8 元左右。',
+    [
+      D('鸡蛋肠粉', '🥡', 7, 4.5, ['招牌'], '皮薄滑，酱汁咸甜刚好，加蛋更香。'),
+      D('肉肠粉', '🥡', 9, 4.2, ['肉馅'], '肉馅细，酱汁给得足。'),
+      D('蒸面', '🍜', 8, 4.0, ['面食'], '面条蒸得软，配的酱汁偏甜。'),
+      D('豆浆', '🥛', 2, 3.8, ['早餐'], '现磨，甜度可调。')
+    ]),
+  S('tl1-ss', '寿司店', '🍣', '桃李食堂', '一楼', '11:20-18:30', 15, 3.7, ['午晚', '寿司'],
+    '主打寿司，味道一般，适合偶尔换口味。',
+    [
+      D('三文鱼寿司', '🍣', 16, 3.9, ['三文鱼'], '切得偏薄，米饭偏酸，价格中规中矩。'),
+      D('卷物拼盘', '🍱', 15, 3.5, ['拼盘'], '种类多，吃个新鲜。'),
+      D('鳗鱼寿司', '🍣', 18, 3.8, ['鳗鱼'], '酱汁偏甜，鳗鱼小块。')
+    ]),
+  S('tl1-hd', '滑蛋饭', '🍳', '桃李食堂', '一楼', '11:20-18:30', 15, 3.9, ['午晚', '滑蛋'],
+    '各种滑蛋饭，也有少量自选炒菜，味道还行，但分量少、菜色少。',
+    [
+      D('滑蛋牛肉饭', '🍳', 15, 4.0, ['牛肉'], '蛋嫩，牛肉片薄，酱汁偏甜。'),
+      D('自选炒菜', '🥘', 14, 3.6, ['自选'], '菜色少，选来选去就那几样。')
+    ]),
+
+  /* ---------- 桃李食堂 二楼 ---------- */
+  S('tl2-mlt', '麻辣烫', '🌶️', '桃李食堂', '二楼', '11:20-18:45', 20, 3.9, ['午晚', '自选'],
+    '和嘉禾二楼同一路子，汤底微辣，菜品新鲜度一般，人均 20 左右。',
+    [
+      D('微辣麻辣烫', '🌶️', 20, 3.9, ['自选'], '夹菜按重量算，人均 20 左右。'),
+      D('番茄麻辣烫', '🍅', 21, 4.0, ['番茄'], '番茄汤底更顺口，适合不太能吃辣的。')
+    ]),
+  S('tl2-tf', '汤饭', '🥣', '桃李食堂', '二楼', '11:20-18:45', 13, 4.2, ['午晚', '汤饭'],
+    '汤饭人的最爱，汤鲜料多，就是老板态度一般。',
+    [
+      D('猪杂汤饭', '🥣', 13, 4.3, ['招牌'], '汤头鲜，猪杂处理得干净，配饭很暖胃。'),
+      D('番茄牛肉汤饭', '🍅', 14, 4.4, ['番茄'], '番茄熬出沙，牛肉片嫩，酸香开胃。'),
+      D('瘦肉汤饭', '🥣', 12, 4.0, ['清淡'], '清淡不油，感冒的时候来一碗很舒服。')
+    ]),
+  S('tl2-kxy', '坎小粤', '🥩', '桃李食堂', '二楼', '11:20-18:45', 12, 4.0, ['午晚', '铁板'],
+    '广式煎鸡排、牛排、猪排还有鸡鸭腿，味道一般但老板态度很好，价格便宜。',
+    [
+      D('煎鸡排饭', '🍗', 12, 4.2, ['招牌', '便宜'], '鸡排现煎，边角焦脆，12 块很值。'),
+      D('煎猪排饭', '🥩', 13, 4.0, ['猪排'], '猪排拍得薄，酱汁偏咸。'),
+      D('鸡腿饭', '🍗', 11, 4.0, ['鸡腿'], '整只鸡腿，价格全场最低。'),
+      D('煎牛排饭', '🥩', 15, 3.9, ['牛排'], '牛排偏薄，图个新鲜。')
+    ]),
+  S('tl2-sl', '广式烧腊', '🦆', '桃李食堂', '二楼', '11:20-18:45', 16, 4.2, ['午晚', '烧腊'],
+    '比嘉禾二楼的烧腊好吃一点，叉烧和烧鸭都稳，价格也还行。',
+    [
+      D('烧鸭饭', '🦆', 16, 4.4, ['招牌'], '鸭皮脆、肉汁足，酸梅酱解腻。'),
+      D('叉烧饭', '🍖', 16, 4.2, ['叉烧'], '蜜汁叉烧，肥瘦均匀，边缘微焦。'),
+      D('猪脚饭', '🍖', 17, 4.3, ['猪脚'], '卤得入味，筋多胶质足。'),
+      D('肉卷饭', '🌯', 14, 4.0, ['便宜'], '肉卷偏咸，胜在便宜。')
+    ]),
+  S('tl2-rx', '任选快餐', '🍚', '桃李食堂', '二楼', '11:20-18:45', 15, 3.0, ['避雷'],
+    '菜品少、饭还难吃、价格还贵，火腿肠都能算肉菜，人均 15 还不一定吃饱。',
+    [
+      D('火腿肠套餐', '🌭', 15, 2.8, ['避雷'], '一根火腿肠算一个肉菜，性价比很低。'),
+      D('自选两荤一素', '🍚', 15, 3.2, ['自选'], '价格不低，出品不稳定。')
+    ]),
+  S('tl2-ms', '姆斯汉堡', '🍔', '桃李食堂', '二楼', '10:00-23:30', 20, 4.6, ['汉堡', '宵夜'],
+    '台风天依旧配送、配送费也不涨价，深夜也能点到，这点很加分。',
+    [
+      D('香辣鸡腿堡', '🍔', 12, 4.5, ['招牌'], '鸡腿肉厚，辣酱够味，面包松软。'),
+      D('双人套餐', '🍟', 35, 4.6, ['套餐'], '两个堡、两杯饮料加小食，人均 20 左右。'),
+      D('薯条', '🍟', 8, 4.3, ['小食'], '现炸粗薯，撒盐刚好。'),
+      D('可乐', '🥤', 5, 4.0, ['饮料'], '冰的，配汉堡必备。')
+    ]),
+
+  /* ---------- 学校门口 ---------- */
+  S('mk-fl', '富临快餐', '🍚', '学校门口', '商铺', '10:30-20:00', 15, 4.2, ['快餐', '吃得饱'],
+    '10:30 左右开门，15 元吃到饱，其他菜也不贵，性价比很高，就是卫生一般。',
+    [
+      D('15 元自助快餐', '🍚', 15, 4.3, ['吃到饱'], '十几样菜随便打，饭管够，性价比之王。'),
+      D('炒时蔬', '🥬', 8, 4.0, ['单点'], '锅气有，油偏多。'),
+      D('例汤', '🥣', 2, 3.8, ['配汤'], '大锅汤，味道看当天。')
+    ]),
+  S('mk-yh', '银海饭店', '🥥', '学校门口', '商铺', '10:30-21:00', 50, 4.0, ['聚餐', '火锅'],
+    '10:30 左右开门，唯一推荐的是椰子鸡火锅，味道还行但价格很贵，不想去市区可以来解馋。',
+    [
+      D('椰子鸡火锅', '🥥', 50, 4.3, ['招牌', '人均高'], '椰青做锅底，鸡肉嫩、汤清甜，人均 50。'),
+      D('白切鸡', '🐔', 45, 3.9, ['粤菜'], '鸡味够，姜葱汁一般。')
+    ]),
+  S('mk-lx', '螺香帅', '🐌', '学校门口', '商铺', '10:30-22:00', 15, 3.6, ['粉面'],
+    '10:30 左右开门，主打杀猪粉和螺蛳粉，味道一般，适合偶尔解馋。',
+    [
+      D('螺蛳粉', '🐌', 15, 3.7, ['螺蛳粉'], '酸笋味正，汤底偏咸，粉略软。'),
+      D('杀猪粉', '🍜', 15, 3.5, ['招牌'], '料给得杂，汤偏油。')
+    ]),
+  S('mk-pj', '鹏记潮汕汤粉', '🍲', '学校门口', '商铺', '10:30-21:00', 13, 4.5, ['汤粉', '推荐'],
+    '10:30 左右开门，汤粉汤面都不错，食材新鲜，是门口最值得去的一家。',
+    [
+      D('牛肉丸汤粉', '🍲', 13, 4.6, ['招牌'], '牛肉丸弹牙，汤头清鲜，13 块很值。'),
+      D('猪杂汤粉', '🍜', 13, 4.4, ['猪杂'], '猪杂新鲜、处理干净，汤有点胡椒香。'),
+      D('湿炒牛河', '🍜', 15, 4.3, ['炒粉'], '镬气足，河粉不断，牛肉嫩。')
+    ]),
+  S('mk-jg', '鸡公煲', '🍗', '学校门口', '商铺', '10:30-21:30', 0, 0, ['还没吃过'],
+    '10:30 左右开门，还没去吃过，价格也不清楚，试过可以自己补一条。',
+    [
+      D('鸡公煲', '🍗', 0, 0, ['待打卡'], '还没吃过，先占个位，试过的同学可以自己补充。')
+    ]),
+  S('mk-sx', '沙县小吃', '🥟', '学校门口', '商铺', '10:30-22:00', 13, 3.8, ['连锁', '便宜'],
+    '10:30 左右开门，全国连锁，味道一般但价格不贵，赶时间的选择。',
+    [
+      D('蒸饺', '🥟', 10, 3.9, ['饺子'], '皮薄馅少，蘸花生酱吃。'),
+      D('拌面', '🍜', 8, 3.8, ['面食'], '花生酱拌面，香但偏干。'),
+      D('炖罐', '🥣', 13, 4.0, ['汤品'], '一罐汤配饭，暖胃。')
+    ]),
+  S('mk-lz', '兰州拉面', '🍜', '学校门口', '商铺', '10:30-22:00', 15, 4.1, ['面食', '可续面'],
+    '10:30 左右开门，面条劲道，肉比较少但可以续面，整体不错。',
+    [
+      D('牛肉拉面', '🍜', 15, 4.3, ['招牌', '可续面'], '面现拉，汤清，牛肉薄片偏少，但能续面。'),
+      D('牛肉炒面', '🍜', 16, 4.0, ['炒面'], '油大，镬气足。'),
+      D('羊肉串', '🍢', 5, 4.2, ['烧烤'], '现烤，孜然味重。')
+    ]),
+  S('mk-dz', '傣族米线', '🍜', '学校门口', '商铺', '10:30-22:00', 0, 0, ['还没吃过'],
+    '10:30 左右开门，还没吃过，米线类可以之后补评价。',
+    [
+      D('傣味米线', '🍜', 0, 0, ['待打卡'], '还没吃过，等你来补。')
+    ]),
+  S('mk-cq', '重庆小面', '🌶️', '学校门口', '商铺', '10:30-22:00', 0, 0, ['新店'],
+    '10:30 左右开门，新开的店，还没吃过。',
+    [
+      D('重庆小面', '🌶️', 0, 0, ['待打卡'], '新店，还没打卡。')
+    ]),
+  S('mk-ae', '阿二美食', '🥘', '学校门口', '商铺', '10:30-21:00', 15, 4.6, ['小炒', '推荐'],
+    '10:30 左右开门，新鲜炒菜，分量足、锅气足、价格实惠，值得一试。',
+    [
+      D('农家小炒肉', '🌶️', 15, 4.7, ['招牌', '下饭'], '现炒出锅，辣椒香、肉片嫩，锅气很足。'),
+      D('番茄炒蛋', '🍅', 12, 4.2, ['家常'], '番茄出沙，蛋嫩，拌饭好吃。'),
+      D('蒜蓉炒菜心', '🥬', 10, 4.3, ['青菜'], '菜心脆嫩，蒜香够。')
+    ]),
+  S('mk-xw', '湘味木桶饭', '🍚', '学校门口', '商铺', '10:30-21:00', 15, 4.1, ['湘菜', '木桶饭'],
+    '10:30 左右开门，锅气足、味道不错，但是分量偏少。',
+    [
+      D('小炒肉木桶饭', '🌶️', 15, 4.3, ['招牌'], '木桶装的饭带焦香，小炒肉够辣。'),
+      D('香干炒肉木桶饭', '🍚', 14, 4.0, ['下饭'], '香干预先卤过，很入味。'),
+      D('酸豆角肉末饭', '🍚', 13, 4.1, ['下饭'], '酸辣开胃，饭量小也能吃完。')
+    ]),
+  S('mk-jl', '鸡柳大人', '🍟', '学校门口', '商铺', '10:30-23:00', 16, 4.2, ['炸物', '小吃'],
+    '10:30 左右开门，炸鸡柳和薯条现炸现卖，当宵夜不错。',
+    [
+      D('炸鸡柳', '🍗', 12, 4.4, ['招牌'], '外脆里嫩，撒辣椒粉更香。'),
+      D('大份薯条', '🍟', 10, 4.1, ['小食'], '粗薯现炸，配番茄酱。'),
+      D('鸡柳薯条套餐', '🍟', 16, 4.3, ['套餐'], '一份鸡柳加薯条和饮料，管饱。')
+    ]),
+  S('mk-sm', '石磨肠粉', '🥡', '学校门口', '商铺', '10:30-20:00', 7, 4.0, ['肠粉', '早餐'],
+    '10:30 左右开门，肠粉很薄、味道不错，可惜酱汁一般，人均 7 元。',
+    [
+      D('石磨肠粉', '🥡', 7, 4.2, ['招牌', '便宜'], '米浆现磨，粉皮薄透，可惜酱汁偏咸。'),
+      D('加蛋肠粉', '🥚', 8, 4.1, ['加蛋'], '加蛋更香，7 块良心价。')
+    ]),
+  S('mk-cq2', '重庆川菜馆', '🌶️', '学校门口', '商铺', '10:30-22:00', 0, 0, ['还没吃过'],
+    '10:30 左右开门，还没吃过，川菜馆，之后可以补。',
+    [
+      D('水煮鱼', '🐟', 0, 0, ['待打卡'], '还没吃过。')
+    ]),
+  S('mk-cr', '超润甜品', '🍮', '学校门口', '商铺', '10:30-23:00', 12, 3.4, ['甜品', '糖水'],
+    '10:30 左右开门，糖水一般，粥卖得偏贵，老板态度也一般。',
+    [
+      D('绿豆沙', '🍵', 8, 3.6, ['糖水'], '沙感一般，甜度偏高。'),
+      D('双皮奶', '🍮', 10, 3.5, ['甜品'], '偏甜，奶味不够浓。'),
+      D('皮蛋瘦肉粥', '🥣', 12, 3.2, ['粥', '偏贵'], '分量不大，价格偏贵。')
+    ]),
+  S('mk-bz', '煲仔饭', '🍚', '学校门口', '商铺', '10:30-21:00', 18, 0, ['还没吃过'],
+    '10:30 左右开门，比较少去，还没认真吃过，人均 18 左右。',
+    [
+      D('腊味煲仔饭', '🍚', 18, 0, ['待打卡'], '还没吃过，价格 18 左右。')
+    ]),
+  S('mk-gm', '古茗', '🧋', '学校门口', '商铺', '10:30-22:30', 12, 4.3, ['饮品', '连锁'],
+    '10:30 左右开门，大牌子，出品稳定，下午来一杯提神。',
+    [
+      D('超厚芋泥奶茶', '🧋', 12, 4.4, ['招牌'], '芋泥厚实，能喝饱。'),
+      D('杨枝甘露', '🥭', 14, 4.5, ['果茶'], '芒果西柚椰浆，夏天必点。'),
+      D('柠檬茶', '🍋', 8, 4.0, ['解腻'], '微酸微涩，配炸物刚好。')
+    ]),
+  S('mk-xc', '小吃摊', '🌭', '学校门口', '商铺', '17:00-24:00', 0, 0, ['夜市', '小吃'],
+    '17:00 左右出摊，汉堡、小蛋糕、炒饭炒面、果切都有。',
+    [
+      D('现做汉堡', '🍔', 10, 3.9, ['夜市'], '现点现做，酱料足。'),
+      D('炒饭炒面', '🍚', 10, 3.8, ['夜市'], '大锅炒，锅气足。'),
+      D('果切', '🍉', 8, 4.1, ['水果'], '现切水果，解腻。')
+    ]),
+  S('mk-cs', '商业超市麻辣烫', '🌶️', '学校门口', '商铺', '10:00-22:00', 18, 4.3, ['麻辣烫', '新店'],
+    '超市里新开的麻辣烫，味道不错，汤底比食堂的更香，菜品也新鲜。',
+    [
+      D('自选麻辣烫', '🌶️', 18, 4.3, ['自选'], '汤底有骨汤香，菜品种类多。'),
+      D('番茄麻辣烫', '🍅', 19, 4.1, ['番茄'], '番茄味正，适合不辣的。')
+    ]),
+
+  /* ---------- 市区 ---------- */
+  S('sq-mq', '麻桥饭店', '🦢', '市区', '市区', '10:30-21:00', 60, 4.9, ['夯爆', '阳江特色', '本地推荐'],
+    '阳江本地人极力推荐，鹅乸饭和白切一绝，就是在小村子里，位置有点偏。地址：江城区 G15 沈海高速麻桥村委会南 200 米。',
+    [
+      D('鹅乸饭', '🦢', 45, 4.9, ['招牌', '必点'], '鹅肉焖得入味，饭吸满鹅油香，阳江味道。'),
+      D('白切鸡', '🐔', 55, 4.8, ['白切'], '皮爽肉滑，姜葱油香，鸡有鸡味。'),
+      D('鹅乸煲', '🍲', 68, 4.7, ['煲'], '浓香带酱，适合多人分。')
+    ]),
+  S('sq-mj', '媚姐火锅店', '🍲', '市区', '市区', '11:00-22:00', 45, 4.8, ['夯', '羊肉煲'],
+    '羊肉煲很好吃，服务也好，冬天来一锅很舒服。地址：江城区环园路与环园二路交叉口东北 20 米。',
+    [
+      D('羊肉煲', '🍲', 45, 4.8, ['招牌'], '羊肉炖得软烂，汤底浓香，蘸料给足。'),
+      D('手打牛肉丸', '🍡', 28, 4.5, ['配菜'], '弹牙有嚼劲。')
+    ]),
+  S('sq-cz', '船仔佬砂锅粥（坪郊）', '🥣', '市区', '市区', '17:00-24:00', 40, 4.7, ['夯', '砂锅粥', '宵夜'],
+    '主打砂锅粥，粥很好喝，煎鸡蛋也很不错。地址：江城区岗列镇坪郊工业区 CI 之一。',
+    [
+      D('虾蟹砂锅粥', '🥣', 45, 4.8, ['招牌'], '米粒开花，虾蟹鲜甜，粥底绵。'),
+      D('煎鸡蛋', '🍳', 8, 4.5, ['小菜'], '边缘焦脆，蛋黄流心。'),
+      D('炒花甲', '🐚', 28, 4.4, ['小炒'], '蒜香浓，花甲干净。')
+    ]),
+  S('sq-qy', '黔源小高山鲜切牛肉自助火锅', '🥩', '市区', '市区', '11:00-22:00', 70, 4.5, ['好', '自助', '牛肉'],
+    '鲜切牛肉自助，服务好，牛肉品质在自助里算不错。地址：江城区湖东路蔓绿坊 C7 号。',
+    [
+      D('鲜切牛肉自助', '🥩', 70, 4.5, ['自助'], '牛肉现切现涮，部位多，吃回本不难。'),
+      D('牛骨汤底', '🍲', 0, 4.3, ['锅底'], '汤清味浓，涮肉不抢味。')
+    ]),
+  S('sq-hz', '鸿仔烧烤大排档', '🦑', '市区', '市区', '17:30-24:00', 45, 4.4, ['好', '烧烤', '海鲜'],
+    '路边大排档，海鲜选择多，白灼鱿鱼和咸鱼茄子煲值得点，价格实惠。地址：江城区城北街道新安达学车报名处。',
+    [
+      D('白灼鱿鱼', '🦑', 38, 4.6, ['招牌'], '鱿鱼脆嫩，蘸酱油芥末。'),
+      D('咸鱼茄子煲', '🍆', 28, 4.5, ['煲'], '咸鱼香，茄子吸油入味。'),
+      D('蒜蓉烤生蚝', '🦪', 5, 4.3, ['烧烤'], '蒜蓉给足，现烤。')
+    ]),
+  S('sq-bw', '百味香粥档', '🥣', '市区', '市区', '11:00-21:00', 60, 4.5, ['好', '粥', '推荐'],
+    '味道不错，以粥为主，其他菜色也很可以。葱度豆腐是来阳江吃过最好吃的豆腐，蒸鸡也很有鸡味。地址：江城区北环路 8 号。',
+    [
+      D('葱度豆腐', '🍲', 32, 4.8, ['招牌', '必点'], '外焦里嫩，葱香和豆香都很突出。'),
+      D('蒸鸡', '🐔', 58, 4.6, ['蒸鸡'], '鸡味浓，肉质紧实。'),
+      D('海鲜粥', '🥣', 45, 4.4, ['粥'], '料足，粥底绵。')
+    ]),
+  S('sq-tj', '添记河提白切鸡', '🐔', '市区', '市区', '11:00-21:00', 60, 4.8, ['夯', '白切鸡', '本地'],
+    '阳江本地白切鸡，鸡油捞粉是天花板级别，鸡肉很厚实。地址：江城区康泰路康泰居 11-12 号（西门旁）。',
+    [
+      D('白切鸡', '🐔', 60, 4.9, ['招牌', '必点'], '鸡皮爽脆，肉厚多汁，姜葱油很香。'),
+      D('鸡油捞粉', '🍜', 15, 4.8, ['主食'], '鸡油拌粉，香到不行，阳江天花板。')
+    ]),
+  S('sq-xl', '西濑食堂', '🥥', '市区', '市区', '11:00-21:00', 60, 4.6, ['夯', '火锅', '需预定'],
+    '主要是火锅，除了椰子鸡其他不太好，现在需要提前找老板微信预定。地址：江城区永宁社 36 号。',
+    [
+      D('椰子鸡火锅', '🥥', 60, 4.6, ['招牌'], '椰青锅底清甜，鸡肉嫩，蘸沙姜酱油。'),
+      D('手打虾滑', '🍤', 30, 4.2, ['配菜'], '虾肉含量高，弹牙。')
+    ]),
+  S('sq-pl', '破破烂烂烤肉店', '🔥', '市区', '市区', '17:00-24:00', 55, 4.1, ['还行', '自助烤肉'],
+    '烤肉自助，在阳江算还行，至少比非诚勿烤好吃。地址：新达城。',
+    [
+      D('自助烤肉', '🥩', 55, 4.1, ['自助'], '肉品种类够，自己掌握火候。'),
+      D('五花肉', '🥓', 0, 4.2, ['烤肉'], '油脂香，烤到微焦最好吃。')
+    ]),
+  S('sq-tj2', '梯记泥焗鸡', '🐓', '市区', '市区', '11:00-21:00', 50, 4.5, ['好吃', '本地特色'],
+    '阳江本地泥焗鸡，很有广东特色，鸡肉带着泥土和荷叶的香气。地址：江城区城西冲表桥下。',
+    [
+      D('泥焗鸡', '🐓', 50, 4.6, ['招牌'], '皮香肉嫩，带一点炭火气。'),
+      D('鸡杂汤', '🥣', 18, 4.2, ['汤'], '清汤，胡椒味暖胃。')
+    ]),
+  S('sq-rs', '任食牛肋条', '🥩', '市区', '市区', '17:00-24:00', 70, 3.9, ['一般', '自助烤肉'],
+    '烤肉自助，看自己技术，烤不好容易柴。地址：江城区东风一路 19 号旧铜锣湾一楼。',
+    [
+      D('牛肋条自助', '🥩', 70, 3.9, ['自助'], '牛肋条管够，自己烤别烤老。')
+    ]),
+  S('sq-sd', '顺德火焰醉鹅', '🦢', '市区', '市区', '11:00-21:30', 45, 4.5, ['好吃', '醉鹅'],
+    '大锅醉鹅，浓厚的酱汁裹挟着鹅肉，很下饭。地址：江城区三环路 156 号。',
+    [
+      D('火焰醉鹅', '🦢', 45, 4.6, ['招牌'], '米酒点火，酱汁浓，鹅肉紧实。'),
+      D('鹅汁捞饭', '🍚', 5, 4.4, ['主食'], '用鹅汁拌饭，一口入魂。')
+    ]),
+  S('sq-dg', '地锅天下铁锅炖地锅鸡', '🍲', '市区', '市区', '11:00-21:30', 40, 4.0, ['还行', '铁锅炖'],
+    '味道偏重，但吃着还可以，锅边饼子蘸汤很香。地址：江城区漠江路 422-9 号辅道马南苑（城市华庭西）。',
+    [
+      D('地锅鸡', '🍲', 40, 4.1, ['招牌'], '鸡肉炖得烂，锅边贴饼吸汤。'),
+      D('铁锅炖鹅', '🦢', 45, 3.9, ['炖菜'], '酱味重，适合重口。')
+    ]),
+  S('sq-mx', '茗香阁猪肚鸡', '🐖', '市区', '市区', '11:00-22:00', 50, 4.2, ['可以', '猪肚鸡'],
+    '猪肚鸡汤不错，胡椒味暖，适合聚餐。地址：阳东区聚荣西路 2 号之 1。',
+    [
+      D('胡椒猪肚鸡', '🍲', 50, 4.3, ['招牌'], '汤白味浓，胡椒够劲。'),
+      D('腊味煲仔饭', '🍚', 28, 4.0, ['主食'], '腊味香，锅巴脆。')
+    ]),
+  S('sq-cc', '串串鲜两元烧烤', '🍢', '市区', '市区', '17:00-24:00', 30, 4.1, ['可以', '平价', '烧烤'],
+    '两元一串，烧烤类型多，是阳江的平价烧烤。地址：江城区东风二路与石湾南路交叉口西 120 米。',
+    [
+      D('两元烧烤串', '🍢', 2, 4.2, ['平价'], '两元一串，荤素同价，随便拿。'),
+      D('烤鸡翅', '🍗', 8, 4.3, ['烧烤'], '外焦里嫩，刷蜜汁。')
+    ])
+];
+
+/* ============================================================
+   2. 本地存储
+   ============================================================ */
+const DATA_KEY = 'cc_shops_v1';
+const FAV_KEY = 'cc_favs_v1';
+const DATA_VER = 1;
+
+let DATA = { ver: DATA_VER, shops: [] };
+let favs = [];
+const shopMap = {};
+const dishMap = {};
+
+function pad2(n) { return String(n).padStart(2, '0'); }
+
+function parseRange(h) {
+  const s = String(h || '');
+  let m = s.match(/(\d{1,2}):(\d{2})\s*[-~～—–到至]\s*(\d{1,2}):(\d{2})/);
+  if (m) return { open: pad2(m[1]) + ':' + m[2], close: pad2(m[3]) + ':' + m[4] };
+  m = s.match(/(\d{1,2}):(\d{2})/);
+  if (m) return { open: pad2(m[1]) + ':' + m[2], close: '22:00' };
+  return { open: '', close: '' };
+}
+
+function normalizeShops(shops) {
+  shops.forEach((s, i) => {
+    if (!s.id) s.id = 's' + (i + 1);
+    s.dishes = Array.isArray(s.dishes) ? s.dishes : [];
+    s.tags = Array.isArray(s.tags) ? s.tags : [];
+    s.rating = Number(s.rating) || 0;
+    s.avg = Number(s.avg) || 0;
+    s.group = GROUP_META[s.group] ? s.group : '嘉禾食堂';
+    if (!s.floor) s.floor = s.group === '嘉禾食堂' || s.group === '桃李食堂' ? '一楼' : (s.group === '学校门口' ? '商铺' : '市区');
+    const r = parseRange(s.hours);
+    if (!s.open) s.open = r.open;
+    if (!s.close) s.close = r.close;
+    s.dishes.forEach((d, j) => {
+      if (!d.id) d.id = s.id + '-d' + (j + 1);
+      d.price = Number(d.price) || 0;
+      d.rating = Number(d.rating) || 0;
+      d.tags = Array.isArray(d.tags) ? d.tags : [];
+    });
+  });
+  return shops;
+}
+
+function saveData() {
+  try { localStorage.setItem(DATA_KEY, JSON.stringify({ ver: DATA_VER, shops: DATA.shops })); } catch (e) {}
+}
+
+function loadFavs() {
+  try {
+    const v = JSON.parse(localStorage.getItem(FAV_KEY) || '[]');
+    favs = Array.isArray(v) ? v : [];
+  } catch (e) { favs = []; }
+}
+function saveFavs() {
+  try { localStorage.setItem(FAV_KEY, JSON.stringify(favs)); } catch (e) {}
+}
+
+function initData() {
+  let saved = null;
+  try { saved = JSON.parse(localStorage.getItem(DATA_KEY) || 'null'); } catch (e) {}
+  if (saved && saved.ver === DATA_VER && Array.isArray(saved.shops)) {
+    DATA = saved;
+  } else {
+    DATA = { ver: DATA_VER, shops: JSON.parse(JSON.stringify(BASE_SHOPS)) };
+  }
+  normalizeShops(DATA.shops);
+  rebuildIndex();
+  saveData();
+}
+
+function rebuildIndex() {
+  Object.keys(shopMap).forEach(k => delete shopMap[k]);
+  Object.keys(dishMap).forEach(k => delete dishMap[k]);
+  DATA.shops.forEach(s => {
+    shopMap[s.id] = s;
+    s.dishes.forEach(d => { dishMap[d.id] = { shop: s, dish: d }; });
+  });
+  // 收藏里可能残留已删除的菜
+  const before = favs.length;
+  favs = favs.filter(id => !!dishMap[id]);
+  if (favs.length !== before) saveFavs();
+}
+
+/* ============================================================
+   3. 工具
+   ============================================================ */
+function esc(s) {
+  return String(s == null ? '' : s).replace(/[&<>"']/g, m => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+  }[m]));
+}
+function starText(r) {
+  const n = Math.max(0, Math.min(5, Math.round(r || 0)));
+  return '★'.repeat(n) + '☆'.repeat(5 - n);
+}
+function rateText(r) { return r ? r.toFixed(1) : '暂无'; }
+function areaOf(s) { return (GROUP_META[s.group] || {}).area || 'in'; }
+function money(v) { return v > 0 ? '¥' + v : '价格未知'; }
+function toMin(t) {
+  const m = /^(\d{1,2}):(\d{2})$/.exec(t || '');
+  return m ? (+m[1]) * 60 + (+m[2]) : null;
+}
+function isOpen(s) {
+  const o = toMin(s.open), c = toMin(s.close);
+  if (o == null || c == null) return null;
+  const d = new Date(), n = d.getHours() * 60 + d.getMinutes();
+  return c > o ? (n >= o && n < c) : (n >= o || n < c);
+}
+function openBadge(s) {
+  const on = isOpen(s);
+  if (on === null) return '';
+  return on ? '<span class="badge b-open">营业中</span>' : '<span class="badge b-close">已打烊</span>';
+}
+// 营业时间的区间（跨夜会拆成两段）
+function openIntervals(s) {
+  const o = toMin(s.open), c = toMin(s.close);
+  if (o == null || c == null) return [];
+  if (c > o) return [[o, c]];
+  return [[o, 1440], [0, c]];
+}
+function servesMeal(s, meal) {
+  const w = MEALS[meal];
+  if (!w) return true;
+  return openIntervals(s).some(iv => iv[0] < w[1] && iv[1] > w[0]);
+}
+function priceInRange(v, key, allowZero) {
+  if (key === '不限') return true;
+  const r = PRICE_RANGES[key];
+  if (!r) return true;
+  if (!v) return !!allowZero;
+  return v >= r[0] && v < r[1];
+}
+function toast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(el._t);
+  el._t = setTimeout(() => el.classList.remove('show'), 1600);
+}
+function tagHtml(tags, extra) {
+  return (tags || []).map(t => {
+    const warn = /避雷|超辣|烧胃|偏贵|注意|待打卡/.test(t);
+    return '<span class="tag' + (warn ? ' warn' : '') + '">' + esc(t) + '</span>';
+  }).join('');
+}
+
+/* ============================================================
+   4. 视图切换
+   ============================================================ */
+let currentGroup = '嘉禾食堂';
+let lastMainView = 'home';
+
+function showView(name) {
+  document.querySelectorAll('.view').forEach(v => v.classList.toggle('active', v.id === 'view-' + name));
+  document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.view === name));
+  if (name === 'home' || name === 'search' || name === 'fav' || name === 'manage') lastMainView = name;
+  window.scrollTo(0, 0);
+  if (name === 'home') renderHome();
+  if (name === 'search') renderSearch();
+  if (name === 'fav') renderFav();
+  if (name === 'manage') renderManage();
+  if (name === 'group') renderGroup();
+  if (name === 'shop') renderShop();
+}
+function goHome() { showView('home'); }
+
+/* ============================================================
+   5. 首页
+   ============================================================ */
+let decideArea = '';
+let decideMeal = '不限';
+let decidePrice = '不限';
+let decideResult = null;
+let rolling = false;
+
+function setArea(a) {
+  decideArea = a;
+  decideResult = null;
+  renderDecide();
+}
+function setDecideMeal(m) { decideMeal = m; decideResult = null; renderDecide(); }
+function setDecidePrice(p) { decidePrice = p; decideResult = null; renderDecide(); }
+
+function decidePool() {
+  return DATA.shops.filter(s => {
+    if (areaOf(s) !== decideArea) return false;
+    if (decideMeal !== '不限' && !servesMeal(s, decideMeal)) return false;
+    if (!priceInRange(s.avg, decidePrice, false)) return false;
+    return true;
+  });
+}
+
+function renderDecide() {
+  document.querySelectorAll('.area-btn').forEach(b => b.classList.toggle('on', b.dataset.area === decideArea));
+  document.getElementById('decide-meal-chips').innerHTML = ['不限'].concat(Object.keys(MEALS)).map(m =>
+    '<button class="chip sm' + (decideMeal === m ? ' on' : '') + '" onclick="setDecideMeal(\'' + m + '\')">' +
+      (m === '不限' ? '不限时段' : m) + '</button>').join('');
+  document.getElementById('decide-price-chips').innerHTML = ['不限'].concat(Object.keys(PRICE_RANGES)).map(p =>
+    '<button class="chip sm' + (decidePrice === p ? ' on' : '') + '" onclick="setDecidePrice(\'' + p + '\')">' +
+      (p === '不限' ? '不限价格' : p + ' 元') + '</button>').join('');
+  const btn = document.getElementById('btn-decide');
+  btn.disabled = !decideArea || rolling;
+  renderDecideResult();
+}
+function renderDecideResult() {
+  const el = document.getElementById('decide-result');
+  if (!decideArea) {
+    el.innerHTML = '<div class="decide-empty">先选「校内」或「校外」，再点开始随机 🍚</div>';
+    return;
+  }
+  if (!decideResult) {
+    const n = decidePool().length;
+    el.innerHTML = n
+      ? '<div class="decide-empty">范围已选好，点上面的按钮，帮你从 ' + n + ' 家店里挑一个</div>'
+      : '<div class="decide-empty">这个组合下没有店，放宽时段或价格试试</div>';
+    return;
+  }
+  const s = shopMap[decideResult.shopId];
+  if (!s) { decideResult = null; renderDecideResult(); return; }
+  const dd = decideResult.dishId ? dishMap[decideResult.dishId] : null;
+  const dish = dd ? dd.dish : null;
+  el.innerHTML =
+    '<div class="dr-card">' +
+      '<div class="dr-top">' +
+        '<div class="dr-emoji">' + esc(s.emoji) + '</div>' +
+        '<div style="flex:1;min-width:0">' +
+          '<div class="dr-name">' + esc(s.name) + ' ' + openBadge(s) + '</div>' +
+          '<div class="dr-where">' + esc(s.group) + (s.floor && s.floor !== s.group ? ' · ' + esc(s.floor) : '') +
+            ' · ' + money(s.avg) + '</div>' +
+        '</div>' +
+      '</div>' +
+      (dish
+        ? '<div class="dr-dish"><div class="t">今天就吃这个</div><div class="n">' + esc(dish.emoji) + ' ' + esc(dish.name) +
+          '<span class="p">' + money(dish.price) + '</span></div><div class="d">' + esc(dish.desc) + '</div></div>'
+        : '') +
+      '<div class="dr-row">' +
+        '<button class="btn-ghost" onclick="rollOnce()">换一个</button>' +
+        '<button class="btn-ghost" onclick="openShop(\'' + s.id + '\')">看看这家</button>' +
+      '</div>' +
+    '</div>';
+}
+function rollingHTML(s) {
+  return '<div class="dr-card"><div class="dr-top"><div class="dr-emoji">' + esc(s.emoji) + '</div>' +
+    '<div style="flex:1"><div class="dr-name">' + esc(s.name) + '</div>' +
+    '<div class="dr-where">' + esc(s.group) + ' · ' + money(s.avg) + '</div></div></div></div>';
+}
+function weightedPick(pool) {
+  const weights = pool.map(s => (s.rating >= 4.5 ? 4 : s.rating >= 4 ? 2 : 1));
+  const total = weights.reduce((a, b) => a + b, 0);
+  let r = Math.random() * total;
+  for (let i = 0; i < pool.length; i++) {
+    r -= weights[i];
+    if (r <= 0) return pool[i];
+  }
+  return pool[pool.length - 1];
+}
+function rollOnce() {
+  if (!decideArea) { toast('先选校内还是校外'); return; }
+  if (rolling) return;
+  const pool = decidePool();
+  if (!pool.length) { toast('这个条件下没有店，放宽一点'); return; }
+  rolling = true;
+  const btn = document.getElementById('btn-decide');
+  btn.disabled = true;
+  btn.textContent = '正在挑…';
+  const el = document.getElementById('decide-result');
+  let ticks = 0;
+  const timer = setInterval(() => {
+    const s = pool[Math.floor(Math.random() * pool.length)];
+    el.innerHTML = rollingHTML(s);
+    ticks++;
+    if (ticks >= 13) {
+      clearInterval(timer);
+      const pick = weightedPick(pool);
+      const dish = pick.dishes.length ? pick.dishes[Math.floor(Math.random() * pick.dishes.length)] : null;
+      decideResult = { shopId: pick.id, dishId: dish ? dish.id : '' };
+      rolling = false;
+      btn.textContent = '再帮我决定一次';
+      renderDecide();
+    }
+  }, 65);
+}
+
+function renderHome() {
+  document.getElementById('home-groups').innerHTML = Object.keys(GROUP_META).map(g => {
+    const meta = GROUP_META[g];
+    const n = DATA.shops.filter(s => s.group === g).length;
+    return '<button class="group-card" onclick="openGroup(\'' + g + '\')">' +
+      '<span class="g-emoji">' + meta.emoji + '</span>' +
+      '<span class="g-main"><b>' + g + '</b><small>' + meta.desc + '</small></span>' +
+      '<span class="g-count">' + n + ' 家</span></button>';
+  }).join('');
+
+  const tops = [];
+  DATA.shops.forEach(s => s.dishes.forEach(d => { if (d.rating >= 4.5) tops.push({ s, d }); }));
+  tops.sort((a, b) => b.d.rating - a.d.rating);
+  document.getElementById('home-top').innerHTML = tops.length
+    ? tops.slice(0, 14).map(({ s, d }) =>
+        '<div class="mini" onclick="openDish(\'' + s.id + '\',\'' + d.id + '\')">' +
+          '<div class="pic">' + esc(d.emoji) + '</div>' +
+          '<div class="n">' + esc(d.name) + '</div>' +
+          '<div class="s">' + esc(s.name) + ' · ' + esc(s.group) + '</div>' +
+          '<div class="row"><span class="price">' + money(d.price) + '</span>' +
+          '<span><span class="stars">' + starText(d.rating) + '</span><span class="rate-num">' + rateText(d.rating) + '</span></span></div>' +
+        '</div>').join('')
+    : '<div class="empty">还没有高分菜品，去「管理」里加几道吧</div>';
+
+  renderDecide();
+}
+
+/* ============================================================
+   6. 分组 / 店铺
+   ============================================================ */
+function openGroup(g) {
+  currentGroup = g;
+  showView('group');
+}
+function renderGroup() {
+  const shops = DATA.shops.filter(s => s.group === currentGroup);
+  document.getElementById('group-title').textContent = currentGroup;
+  document.getElementById('group-sub').textContent = shops.length + ' 家';
+  if (!shops.length) {
+    document.getElementById('group-body').innerHTML = '<div class="empty" style="margin:20px 18px">这里还没有店铺，去「管理」里加一家</div>';
+    return;
+  }
+  const floors = [];
+  shops.forEach(s => { if (floors.indexOf(s.floor) < 0) floors.push(s.floor); });
+  document.getElementById('group-body').innerHTML = floors.map(f => {
+    const list = shops.filter(s => s.floor === f);
+    return '<div class="floor-title">' + esc(f) + ' · ' + list.length + ' 家</div>' +
+      list.map(s =>
+        '<button class="shop-row" onclick="openShop(\'' + s.id + '\')">' +
+          '<span class="shop-emoji">' + esc(s.emoji) + '</span>' +
+          '<span class="shop-main">' +
+            '<span class="n">' + esc(s.name) + (s.rating >= 4.5 ? ' <span class="badge b-hot">推荐</span>' : '') + '</span>' +
+            '<span class="s">' + esc(s.hours) + ' · 人均 ' + (s.avg ? s.avg + ' 元' : '未知') + '</span>' +
+          '</span>' +
+          '<span class="shop-right"><div class="stars">' + starText(s.rating) + '</div>' +
+            '<div class="rate-num">' + rateText(s.rating) + '</div>' + openBadge(s) + '</span>' +
+        '</button>').join('');
+  }).join('');
+}
+
+let currentShopId = null;
+function openShop(id) {
+  const s = shopMap[id];
+  if (!s) { toast('这家店已被删除'); return; }
+  currentShopId = id;
+  currentGroup = s.group;
+  showView('shop');
+}
+function renderShop() {
+  const s = shopMap[currentShopId];
+  if (!s) { showView('home'); return; }
+  document.getElementById('shop-title').textContent = s.name;
+  document.getElementById('shop-sub').textContent = s.group;
+  document.getElementById('shop-body').innerHTML =
+    '<div class="shop-hero">' +
+      '<button class="edit-btn" onclick="openShopEditor(\'' + s.id + '\')">编辑</button>' +
+      '<div class="top"><div class="big">' + esc(s.emoji) + '</div>' +
+        '<div><h1>' + esc(s.name) + '</h1>' +
+        '<div class="where">' + esc(s.group) + (s.floor && s.floor !== s.group ? ' · ' + esc(s.floor) : '') + '</div>' +
+        '<div class="where">' + esc(s.hours) + ' ' + openBadge(s) + '</div></div></div>' +
+      '<div class="desc">' + esc(s.desc) + '</div>' +
+      '<div class="meta">' +
+        '<span class="pill price">人均 ' + (s.avg ? s.avg + ' 元' : '未知') + '</span>' +
+        '<span class="pill">' + (s.rating ? starText(s.rating) + ' ' + s.rating.toFixed(1) : '暂无评分') + '</span>' +
+        (s.tags || []).map(t => '<span class="pill">' + esc(t) + '</span>').join('') +
+      '</div>' +
+    '</div>' +
+    '<div class="dish-list">' +
+      (s.dishes.length
+        ? s.dishes.map(d =>
+          '<button class="dish-row" onclick="openDish(\'' + s.id + '\',\'' + d.id + '\')">' +
+            '<span class="d-emoji">' + esc(d.emoji) + '</span>' +
+            '<span class="d-main">' +
+              '<span class="d-top"><b>' + esc(d.name) + '</b>' +
+                (favs.indexOf(d.id) > -1 ? '<span class="tag good">已收藏</span>' : '') + '</span>' +
+              '<span class="d-desc">' + esc(d.desc) + '</span>' +
+              '<span class="d-foot"><span class="tags">' + tagHtml(d.tags) + '</span>' +
+                '<span class="price">' + money(d.price) + '</span></span>' +
+            '</span></button>').join('')
+        : '<div class="empty">这家店还没有菜品，点右上角编辑添加</div>') +
+    '</div>';
+}
+function backToGroup() { showView('group'); }
+
+/* ============================================================
+   7. 菜品弹层
+   ============================================================ */
+let currentDishId = null;
+let currentDishShopId = null;
+
+function openDish(shopId, dishId) {
+  const item = dishMap[dishId];
+  if (!item) return;
+  currentDishId = dishId;
+  currentDishShopId = shopId;
+  const d = item.dish, s = item.shop;
+  document.getElementById('sheet-emoji').textContent = d.emoji;
+  document.getElementById('sheet-name').textContent = d.name;
+  document.getElementById('sheet-where').textContent = s.name + ' · ' + s.group + (s.floor && s.floor !== s.group ? ' · ' + s.floor : '');
+  document.getElementById('sheet-price').textContent = money(d.price);
+  document.getElementById('sheet-rate').textContent = (d.rating ? starText(d.rating) + ' ' + d.rating.toFixed(1) : '暂无评分') + '　' + esc(s.hours);
+  document.getElementById('sheet-desc').textContent = d.desc;
+  document.getElementById('sheet-tags').innerHTML = tagHtml(d.tags);
+  updateFavButton();
+  document.getElementById('sheet').scrollTop = 0;
+  document.getElementById('mask').classList.add('open');
+  document.getElementById('sheet').classList.add('open');
+}
+function closeDish() {
+  document.getElementById('mask').classList.remove('open');
+  document.getElementById('sheet').classList.remove('open');
+}
+function updateFavButton() {
+  const btn = document.getElementById('sheet-fav');
+  const on = favs.indexOf(currentDishId) > -1;
+  btn.classList.toggle('on', on);
+  btn.textContent = on ? '❤️ 已收藏（再点取消）' : '🤍 收藏这道菜';
+}
+function toggleFavFromSheet() {
+  if (!currentDishId) return;
+  const i = favs.indexOf(currentDishId);
+  if (i > -1) favs.splice(i, 1); else favs.push(currentDishId);
+  saveFavs();
+  updateFavButton();
+  toast(i > -1 ? '已取消收藏' : '已收藏，去「收藏」页看看');
+  if (document.getElementById('view-shop').classList.contains('active')) renderShop();
+  if (document.getElementById('view-fav').classList.contains('active')) renderFav();
+}
+function goShopFromSheet() {
+  const id = currentDishShopId;
+  closeDish();
+  if (id) openShop(id);
+}
+
+/* ============================================================
+   8. 搜索 / 收藏
+   ============================================================ */
+let searchArea = '全部';
+let searchGroup = '全部';
+let searchMeal = '不限';
+let searchPrice = '不限';
+
+function setSearchArea(a) { searchArea = a; renderSearch(); }
+function setSearchGroup(g) { searchGroup = g; renderSearch(); }
+function setSearchMeal(m) { searchMeal = m; renderSearch(); }
+function setSearchPrice(p) { searchPrice = p; renderSearch(); }
+
+function renderChips() {
+  document.getElementById('area-chips').innerHTML = ['全部', '校内', '校外'].map(a =>
+    '<button class="chip' + (searchArea === a ? ' on' : '') + '" onclick="setSearchArea(\'' + a + '\')">' +
+      (a === '全部' ? '全部范围' : a) + '</button>').join('');
+  const gs = ['全部'].concat(Object.keys(GROUP_META));
+  document.getElementById('group-chips').innerHTML = gs.map(g =>
+    '<button class="chip' + (searchGroup === g ? ' on' : '') + '" onclick="setSearchGroup(\'' + g + '\')">' +
+      (g === '全部' ? '全部分类' : g) + '</button>').join('');
+  document.getElementById('meal-chips').innerHTML = ['不限'].concat(Object.keys(MEALS)).map(m =>
+    '<button class="chip' + (searchMeal === m ? ' on' : '') + '" onclick="setSearchMeal(\'' + m + '\')">' +
+      (m === '不限' ? '不限时段' : m) + '</button>').join('');
+  document.getElementById('price-chips').innerHTML = ['不限'].concat(Object.keys(PRICE_RANGES)).map(p =>
+    '<button class="chip' + (searchPrice === p ? ' on' : '') + '" onclick="setSearchPrice(\'' + p + '\')">' +
+      (p === '不限' ? '不限价格' : p + ' 元') + '</button>').join('');
+}
+
+function matchShop(s, kw) {
+  const hay = [s.name, s.group, s.floor, s.desc, (s.tags || []).join('')].join(' ').toLowerCase();
+  return hay.indexOf(kw) > -1;
+}
+function matchDish(s, d, kw) {
+  const hay = [d.name, d.desc, (d.tags || []).join(''), s.name, s.group].join(' ').toLowerCase();
+  return hay.indexOf(kw) > -1;
+}
+function shopPasses(s) {
+  if (searchArea !== '全部') {
+    const a = areaOf(s);
+    if ((searchArea === '校内' && a !== 'in') || (searchArea === '校外' && a !== 'out')) return false;
+  }
+  if (searchGroup !== '全部' && s.group !== searchGroup) return false;
+  if (searchMeal !== '不限' && !servesMeal(s, searchMeal)) return false;
+  if (!priceInRange(s.avg, searchPrice, false)) return false;
+  return true;
+}
+function doSearch() { renderSearch(); }
+
+function renderSearch() {
+  renderChips();
+  const kw = (document.getElementById('search-input').value || '').trim().toLowerCase();
+  const shops = DATA.shops.filter(s => shopPasses(s) && (!kw || matchShop(s, kw)));
+  const dishes = [];
+  DATA.shops.forEach(s => {
+    if (!shopPasses(s)) return;
+    s.dishes.forEach(d => {
+      if (searchPrice !== '不限' && !priceInRange(d.price, searchPrice, true)) return;
+      if (!kw || matchDish(s, d, kw)) dishes.push({ s, d });
+    });
+  });
+  document.getElementById('search-tip').textContent = '找到 ' + shops.length + ' 家店 · ' + dishes.length + ' 道菜';
+  let html = '';
+  if (shops.length) {
+    html += '<div class="floor-title">店铺</div>';
+    html += shops.map(s =>
+      '<button class="shop-row" onclick="openShop(\'' + s.id + '\')">' +
+        '<span class="shop-emoji">' + esc(s.emoji) + '</span>' +
+        '<span class="shop-main"><span class="n">' + esc(s.name) + '</span>' +
+        '<span class="s">' + esc(s.group) + ' · ' + esc(s.hours) + '</span></span>' +
+        '<span class="shop-right"><div class="stars">' + starText(s.rating) + '</div>' +
+        '<div class="rate-num">' + (s.avg ? s.avg + ' 元' : '未知') + '</div>' + openBadge(s) + '</span>' +
+      '</button>').join('');
+  }
+  if (dishes.length) {
+    html += '<div class="floor-title">菜品</div><div class="dish-list">';
+    html += dishes.map(({ s, d }) =>
+      '<button class="dish-row" onclick="openDish(\'' + s.id + '\',\'' + d.id + '\')">' +
+        '<span class="d-emoji">' + esc(d.emoji) + '</span>' +
+        '<span class="d-main">' +
+          '<span class="d-top"><b>' + esc(d.name) + '</b>' +
+            (d.rating >= 4.5 ? '<span class="tag good">高分</span>' : '') + '</span>' +
+          '<span class="d-sub">' + esc(s.name) + ' · ' + esc(s.group) + '</span>' +
+          '<span class="d-desc">' + esc(d.desc) + '</span>' +
+          '<span class="d-foot"><span class="tags">' + tagHtml(d.tags) + '</span>' +
+            '<span class="price">' + money(d.price) + '</span></span>' +
+        '</span></button>').join('');
+    html += '</div>';
+  }
+  if (!shops.length && !dishes.length) html = '<div class="empty" style="margin:18px">没有找到，换个关键词试试</div>';
+  document.getElementById('search-body').innerHTML = html;
+}
+
+function renderFav() {
+  const el = document.getElementById('fav-list');
+  const items = favs.map(id => dishMap[id]).filter(Boolean);
+  if (!items.length) {
+    el.innerHTML = '<div class="empty">还没有收藏。点开任意菜品，底部有收藏按钮 ❤️</div>';
+    return;
+  }
+  el.innerHTML = items.map(({ shop: s, dish: d }) =>
+    '<button class="dish-row" onclick="openDish(\'' + s.id + '\',\'' + d.id + '\')">' +
+      '<span class="d-emoji">' + esc(d.emoji) + '</span>' +
+      '<span class="d-main">' +
+        '<span class="d-top"><b>' + esc(d.name) + '</b></span>' +
+        '<span class="d-sub">' + esc(s.name) + ' · ' + esc(s.group) + ' · ' + esc(s.hours) + '</span>' +
+        '<span class="d-desc">' + esc(d.desc) + '</span>' +
+        '<span class="d-foot"><span class="stars">' + starText(d.rating) + '</span>' +
+          '<span class="price">' + money(d.price) + '</span></span>' +
+      '</span></button>').join('');
+}
+
+/* ============================================================
+   9. 管理：增删改
+   ============================================================ */
+let editShopId = null;
+let editDishId = null;
+
+function renderManage() {
+  const el = document.getElementById('manage-list');
+  el.innerHTML = Object.keys(GROUP_META).map(g => {
+    const shops = DATA.shops.filter(s => s.group === g);
+    if (!shops.length) return '';
+    return '<div class="m-group"><div class="m-title">' + GROUP_META[g].emoji + ' ' + g +
+      '<span>' + shops.length + ' 家</span></div>' +
+      shops.map(s =>
+        '<div class="m-row"><span class="shop-emoji">' + esc(s.emoji) + '</span>' +
+        '<span class="m-name">' + esc(s.name) + '</span>' +
+        '<button class="mini-btn" onclick="openShopEditor(\'' + s.id + '\')">编辑</button>' +
+        '<button class="mini-btn danger" onclick="delShop(\'' + s.id + '\')">删除</button></div>').join('') +
+      '</div>';
+  }).join('') || '<div class="empty" style="margin:18px">还没有店铺</div>';
+}
+
+function syncFloorHint() {
+  const g = document.getElementById('es-group').value;
+  const floor = document.getElementById('es-floor');
+  if (!floor.value || floor._auto) {
+    floor.value = g === '嘉禾食堂' || g === '桃李食堂' ? '一楼' : (g === '学校门口' ? '商铺' : '市区');
+    floor._auto = true;
+  }
+}
+
+function openShopEditor(id) {
+  editShopId = id || null;
+  const s = id ? shopMap[id] : null;
+  document.getElementById('shop-ed-title').textContent = s ? '编辑店铺' : '新增店铺';
+  document.getElementById('es-name').value = s ? s.name : '';
+  document.getElementById('es-emoji').value = s ? s.emoji : '🍽️';
+  document.getElementById('es-group').value = s ? s.group : '嘉禾食堂';
+  const fl = document.getElementById('es-floor');
+  fl.value = s ? s.floor : '一楼';
+  fl._auto = true;
+  document.getElementById('es-hours').value = s ? s.hours : '11:20-18:45';
+  document.getElementById('es-avg').value = s ? (s.avg || '') : '';
+  document.getElementById('es-rating').value = s ? (s.rating || '') : '';
+  document.getElementById('es-tags').value = s ? (s.tags || []).join(',') : '';
+  document.getElementById('es-desc').value = s ? s.desc : '';
+  document.getElementById('shop-del-btn').style.display = s ? 'block' : 'none';
+  document.getElementById('shop-editor').classList.add('open');
+  renderEditorDishes();
+}
+
+function closeShopEditor() {
+  document.getElementById('shop-editor').classList.remove('open');
+  editShopId = null;
+  renderManage();
+  if (currentShopId) renderShop();
+}
+
+function renderEditorDishes() {
+  const box = document.getElementById('ed-dishes');
+  const s = editShopId ? shopMap[editShopId] : null;
+  if (!s) {
+    box.innerHTML = '<div class="empty" style="padding:14px">先保存店铺，再来添加菜品</div>';
+    return;
+  }
+  box.innerHTML = s.dishes.length ? s.dishes.map(d =>
+    '<div class="ed-dish"><span>' + esc(d.emoji) + '</span><span class="n">' + esc(d.name) + '</span>' +
+    '<span class="p">' + (d.price ? '¥' + d.price : '—') + '</span>' +
+    '<button class="mini-btn" onclick="openDishEditor(\'' + d.id + '\')">改</button>' +
+    '<button class="mini-btn danger" onclick="delDish(\'' + d.id + '\')">删</button></div>').join('')
+    : '<div class="empty" style="padding:14px">还没有菜品</div>';
+}
+
+function saveShop() {
+  const name = document.getElementById('es-name').value.trim();
+  if (!name) { toast('先填店名'); return; }
+  const group = document.getElementById('es-group').value;
+  const hours = document.getElementById('es-hours').value.trim() || '11:20-18:45';
+  const range = parseRange(hours);
+  const data = {
+    name,
+    emoji: document.getElementById('es-emoji').value.trim() || '🍽️',
+    group,
+    floor: document.getElementById('es-floor').value.trim() || '一楼',
+    hours,
+    open: range.open,
+    close: range.close,
+    avg: Number(document.getElementById('es-avg').value) || 0,
+    rating: Math.max(0, Math.min(5, Number(document.getElementById('es-rating').value) || 0)),
+    tags: document.getElementById('es-tags').value.split(/[,，\s]+/).map(x => x.trim()).filter(Boolean),
+    desc: document.getElementById('es-desc').value.trim()
+  };
+  if (editShopId) {
+    Object.assign(shopMap[editShopId], data);
+  } else {
+    const id = 'u' + Date.now();
+    DATA.shops.push(Object.assign({ id, dishes: [] }, data));
+    editShopId = id;
+  }
+  saveData();
+  rebuildIndex();
+  toast('已保存，立即生效');
+  renderAll();
+  closeShopEditor();
+}
+
+function delShop(id) {
+  const s = shopMap[id];
+  if (!s) return;
+  askConfirm('删除「' + s.name + '」？这家店的菜品和收藏也会一起删掉。', () => {
+    DATA.shops = DATA.shops.filter(x => x.id !== id);
+    saveData();
+    rebuildIndex();
+    renderAll();
+    toast('已删除');
+  });
+}
+function delShopFromEditor() {
+  if (!editShopId) return;
+  const s = shopMap[editShopId];
+  if (!s) return;
+  askConfirm('删除「' + s.name + '」？', () => {
+    DATA.shops = DATA.shops.filter(x => x.id !== editShopId);
+    saveData();
+    rebuildIndex();
+    editShopId = null;
+    document.getElementById('shop-editor').classList.remove('open');
+    renderAll();
+    showView('manage');
+    toast('已删除');
+  });
+}
+
+function openDishEditor(dishId) {
+  if (!editShopId) { toast('先保存店铺，再加菜品'); return; }
+  const s = shopMap[editShopId];
+  editDishId = dishId || null;
+  const d = dishId ? s.dishes.find(x => x.id === dishId) : null;
+  document.getElementById('dish-ed-title').textContent = d ? '编辑菜品' : '添加菜品';
+  document.getElementById('ed-name').value = d ? d.name : '';
+  document.getElementById('ed-emoji').value = d ? d.emoji : '🍚';
+  document.getElementById('ed-price').value = d ? (d.price || '') : '';
+  document.getElementById('ed-rating').value = d ? (d.rating || '') : '';
+  document.getElementById('ed-tags').value = d ? (d.tags || []).join(',') : '';
+  document.getElementById('ed-desc').value = d ? d.desc : '';
+  document.getElementById('dish-del-btn').style.display = d ? 'block' : 'none';
+  document.getElementById('dish-editor').classList.add('open');
+}
+function closeDishEditor() {
+  document.getElementById('dish-editor').classList.remove('open');
+  editDishId = null;
+}
+
+function saveDish() {
+  if (!editShopId) return;
+  const s = shopMap[editShopId];
+  const name = document.getElementById('ed-name').value.trim();
+  if (!name) { toast('先填菜名'); return; }
+  const data = {
+    name,
+    emoji: document.getElementById('ed-emoji').value.trim() || '🍚',
+    price: Number(document.getElementById('ed-price').value) || 0,
+    rating: Math.max(0, Math.min(5, Number(document.getElementById('ed-rating').value) || 0)),
+    tags: document.getElementById('ed-tags').value.split(/[,，\s]+/).map(x => x.trim()).filter(Boolean),
+    desc: document.getElementById('ed-desc').value.trim()
+  };
+  if (editDishId) {
+    const d = s.dishes.find(x => x.id === editDishId);
+    if (d) Object.assign(d, data);
+  } else {
+    s.dishes.push(Object.assign({ id: s.id + '-u' + Date.now() }, data));
+  }
+  saveData();
+  rebuildIndex();
+  renderEditorDishes();
+  renderAll();
+  closeDishEditor();
+  toast('菜品已保存');
+}
+
+function delDish(dishId) {
+  if (!editShopId) return;
+  const s = shopMap[editShopId];
+  const d = s.dishes.find(x => x.id === dishId);
+  if (!d) return;
+  askConfirm('删除「' + d.name + '」？', () => {
+    s.dishes = s.dishes.filter(x => x.id !== dishId);
+    saveData();
+    rebuildIndex();
+    renderEditorDishes();
+    renderAll();
+    toast('已删除');
+  });
+}
+function delDishFromEditor() {
+  if (!editDishId) return;
+  const id = editDishId;
+  askConfirm('删除这道菜？', () => {
+    const s = shopMap[editShopId];
+    if (s) s.dishes = s.dishes.filter(x => x.id !== id);
+    saveData();
+    rebuildIndex();
+    closeDishEditor();
+    renderEditorDishes();
+    renderAll();
+    toast('已删除');
+  });
+}
+
+function askReset() {
+  askConfirm('会清空你所有的修改，恢复成 App 内置的数据，确定吗？', () => {
+    DATA = { ver: DATA_VER, shops: JSON.parse(JSON.stringify(BASE_SHOPS)) };
+    normalizeShops(DATA.shops);
+    saveData();
+    rebuildIndex();
+    decideResult = null;
+    renderAll();
+    showView('manage');
+    toast('已恢复内置数据');
+  });
+}
+
+/* ============================================================
+   10. 确认框
+   ============================================================ */
+let confirmCb = null;
+function askConfirm(msg, cb) {
+  confirmCb = cb;
+  document.getElementById('confirm-msg').textContent = msg;
+  document.getElementById('confirm-layer').classList.add('open');
+}
+function closeConfirm() {
+  document.getElementById('confirm-layer').classList.remove('open');
+  confirmCb = null;
+}
+function okConfirm() {
+  const cb = confirmCb;
+  closeConfirm();
+  if (cb) cb();
+}
+
+/* ============================================================
+   11. 渲染全部 / 返回键 / 初始化
+   ============================================================ */
+function renderAll() {
+  const active = document.querySelector('.view.active');
+  const name = active ? active.id.replace('view-', '') : 'home';
+  renderHome();
+  renderSearch();
+  renderFav();
+  renderManage();
+  if (name === 'group') renderGroup();
+  if (name === 'shop') renderShop();
+}
+
+window.__androidBack = function () {
+  if (document.getElementById('confirm-layer').classList.contains('open')) { closeConfirm(); return true; }
+  if (document.getElementById('dish-editor').classList.contains('open')) { closeDishEditor(); return true; }
+  if (document.getElementById('shop-editor').classList.contains('open')) { closeShopEditor(); return true; }
+  if (document.getElementById('sheet').classList.contains('open')) { closeDish(); return true; }
+  if (document.getElementById('view-shop').classList.contains('active')) { showView('group'); return true; }
+  if (document.getElementById('view-group').classList.contains('active')) { showView('home'); return true; }
+  if (!document.getElementById('view-home').classList.contains('active')) { showView('home'); return true; }
+  return false;
+};
+
+initData();
+loadFavs();
+rebuildIndex();
+renderAll();
+showView('home');
+
+
+</script>
+<dialog id="install-help" aria-labelledby="install-title">
+  <div class="install-heading"><h2 id="install-title">把吃啥呀放到桌面</h2><button aria-label="关闭" onclick="closeInstallHelp()">×</button></div>
+  <p id="install-device-tip"></p><ol id="install-steps"></ol>
+  <p class="install-note">首次联网打开并加载完成后，可离线选餐。收藏和修改只存在当前设备，不会同步给同学。</p>
+  <button id="native-install" class="btn-primary" hidden onclick="installAndroid()">添加到桌面</button>
+  <label class="share-link-label" for="share-link">分享这个链接，苹果和安卓都能打开</label>
+  <div class="share-link-row"><input id="share-link" type="url" readonly aria-label="应用分享链接" /><button onclick="copyAppLink()">复制</button></div>
+</dialog>
+</body>
+</html>

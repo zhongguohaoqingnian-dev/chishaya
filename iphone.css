@@ -1,0 +1,22 @@
+.app{padding-bottom:calc(90px + env(safe-area-inset-bottom))}
+.hero{padding-top:calc(18px + env(safe-area-inset-top))}
+.page-head,.ed-head{padding-top:calc(14px + env(safe-area-inset-top))}
+.search-box input,.field input,.field select,.field textarea{font-size:16px}
+.phone-actions{display:flex;gap:8px;margin-top:13px}
+.phone-actions button{border:1px solid rgba(255,255,255,.38);background:rgba(255,255,255,.16);padding:7px 12px;border-radius:12px;font-size:12px;font-weight:700;color:#fff;min-height:36px}
+button:focus-visible,input:focus-visible{outline:3px solid #2EC4B6;outline-offset:3px}
+#install-help{width:calc(100% - 32px);max-width:410px;margin:auto;padding:22px;border:0;border-radius:24px;background:#FFFDFB;color:var(--ink);box-shadow:0 20px 70px #3a2b2740;max-height:85dvh;overflow:auto}
+#install-help::backdrop{background:rgba(58,43,39,.48)}
+.install-heading{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}
+.install-heading h2{font-size:18px}
+.install-heading button{font-size:28px;line-height:1;width:36px;height:36px;border-radius:50%;background:var(--brand-soft)}
+#install-device-tip{font-size:14px;line-height:1.7}
+#install-steps{padding-left:22px;margin:14px 0;font-size:14px;line-height:1.9}
+#install-steps li{margin:6px 0}
+.install-note{font-size:12px;line-height:1.7;background:#FFF3E9;border-radius:12px;padding:11px;color:var(--ink2)}
+.share-link-label{display:block;font-size:12px;font-weight:700;margin:16px 0 8px}
+.share-link-row{display:flex;gap:8px;align-items:center}
+.share-link-row input{min-width:0;flex:1;border:1px solid var(--line);background:white;border-radius:10px;padding:10px;font-size:16px}
+.share-link-row button{background:var(--brand);color:white;padding:11px 13px;border-radius:10px;font-weight:700}
+[hidden]{display:none!important}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition:none!important}}
